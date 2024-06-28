@@ -5,7 +5,7 @@ export interface IUser {
   username: string;
   email: string;
   password: string;
-  citta: string;
+  city: string;
 
   avatar?: string;
 
