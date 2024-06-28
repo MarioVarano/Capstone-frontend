@@ -27,6 +27,7 @@
           <label for="città" class="form-label">Città</label>
           <input type="text" id="città" class="form-control" [(ngModel)]="registerUserData.citta" name="città" required>
         </div>
+        {{registerUserData.citta}}
         <div class="mb-3 form-check">
           <input type="checkbox" id="isProfessionista" class="form-check-input" [(ngModel)]="isProfessionista" name="isProfessionista">
           <label for="isProfessionista" class="form-check-label">Sono un Professionista</label>
@@ -42,6 +43,9 @@
           </div>
         </div>
         <button type="submit" class="btn btn-primary">Registrati</button>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+          {{ errorMessage }}
+        </div>
       </form>
     </div>
   </div>

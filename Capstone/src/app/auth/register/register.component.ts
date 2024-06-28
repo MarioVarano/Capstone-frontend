@@ -15,34 +15,52 @@ export class RegisterComponent {
   registerUserData: Partial<IUser> = {};
   registerProfessionistaData: Partial<IProfessionista> = {};
   isProfessionista: boolean = false;
+  errorMessage: string | null = null;
 
-  constructor(
-    private authSvc: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authSvc: AuthService, private router: Router) {}
 
   register() {
     if (this.isProfessionista) {
-      // Copia i dati comuni da registerUserData a registerBarmanData
+      // Copia i dati comuni da registerUserData a registerProfessionistaData
       this.registerProfessionistaData = {
         ...this.registerUserData,
         ...this.registerProfessionistaData
       } as Partial<IProfessionista>;
 
-      console.log('Professionista Data:', this.registerProfessionistaData); // Log dei dati barman
-
-      this.authSvc.registerProfessionista(this.registerProfessionistaData).subscribe(
-        data => this.router.navigate(['']),
-        error => console.error('Professionista registration failed', error) // Log dell'errore
-      );
+      this.authSvc.registerProfessionista(this.registerProfessionistaData).subscribe({
+        next: (data) => this.router.navigate(['auth/login']),
+        error: (error) => {
+          console.error('Professionista registration failed', error);
+          this.errorMessage = this.getErrorMessage(error);
+        }
+      });
     } else {
-      console.log('User Data:', this.registerUserData); // Log dei dati user
-
-      this.authSvc.registerUser(this.registerUserData).subscribe(
-        data => this.router.navigate(['']),
-        error => console.error('User registration failed', error) // Log dell'errore
-      );
+      this.authSvc.registerUser(this.registerUserData).subscribe({
+        next: (data) => this.router.navigate(['auth/login']),
+        error: (error) => {
+          console.error('User registration failed', error);
+          this.errorMessage = this.getErrorMessage(error);
+        }
+      });
     }
+  }
+
+  private getErrorMessage(error: any): string {
+    if (error.error) {
+      switch (error.error) {
+        case 'Email and Password are required':
+          return 'Email e password obbligatorie';
+        case 'Email already exists':
+          return 'Utente esistente';
+        case 'Email format is invalid':
+          return 'Email scritta male';
+        case 'Cannot find user':
+          return 'Utente inesistente';
+        default:
+          return 'Errore';
+      }
+    }
+    return 'Errore sconosciuto';
   }
 
 }
