@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { IProfessionista } from '../../Models/iprofessionista';
 import { Router } from '@angular/router';
 import { IUser } from '../../Models/iUser';
 import { AuthService } from '../auth.service';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-register',
@@ -16,12 +17,34 @@ export class RegisterComponent {
   registerProfessionistaData: Partial<IProfessionista> = {};
   isProfessionista: boolean = false;
   errorMessage: string | null = null;
+  closeResult: string = '';
 
-  constructor(private authSvc: AuthService, private router: Router) {}
+  constructor(private modalService: NgbModal, private authSvc: AuthService, private router: Router) {}
+
+  open(content: TemplateRef<any>) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
+      (result) => {
+        this.closeResult = `Closed with: ${result}`;
+      },
+      (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      }
+    );
+  }
+
+  private getDismissReason(reason: any): string {
+    switch (reason) {
+      case ModalDismissReasons.ESC:
+        return 'by pressing ESC';
+      case ModalDismissReasons.BACKDROP_CLICK:
+        return 'by clicking on a backdrop';
+      default:
+        return `with: ${reason}`;
+    }
+  }
 
   register() {
     if (this.isProfessionista) {
-      // Copia i dati comuni da registerUserData a registerProfessionistaData
       this.registerProfessionistaData = {
         ...this.registerUserData,
         ...this.registerProfessionistaData
