@@ -5,10 +5,10 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
         <li class="nav-item">
           <a class="nav-link" routerLink="/">
-            <img src="../../../assets/logo87.jpg" alt="Logo" class="logo">
+            <img src="../../../assets/1.png" alt="Logo" class="logo">
           </a>
         </li>
         <li class="nav-item" *ngIf="!isUserLoggedIn">
@@ -23,20 +23,11 @@
         <li class="nav-item" *ngIf="isUserLoggedIn">
           <a class="nav-link" routerLink="/Utenti">Utenti registrati</a>
         </li>
-        <li class="nav-item dropdown"  *ngIf="!isUserLoggedIn">
-          <a class="nav-link dropdown-toggle" (click)="show = !show" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Account
-          </a>
-          <ul class="dropdown-menu" [ngClass]="{show}">
-            <li><a class="dropdown-item" routerLink="/auth/login">Login</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" routerLink="/auth/register">Register</a></li>
-          </ul>
+        <li class="nav-item" *ngIf="isUserLoggedIn">
+          <a class="nav-link" routerLink="/Professionisti">Professionisti</a>
         </li>
-
       </ul>
-      <button
-      (click)="logout()" *ngIf="isUserLoggedIn" class="btn btn-danger">Esci</button>
+      <button (click)="logout()" *ngIf="isUserLoggedIn" class="btn btn-danger">Esci</button>
     </div>
   </div>
 </nav>
