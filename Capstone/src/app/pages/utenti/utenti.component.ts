@@ -1,70 +1,62 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { IUser } from '../../Models/iUser';
 import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-utenti',
   templateUrl: './utenti.component.html'
 })
 export class UtentiComponent implements OnInit {
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-  user: IUser | undefined;
+  user: IUser = {
+    id: 0,
+    firstName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    password: '',
+    city: '',
+    avatar: '' // Path all'immagine del profilo
+  };
+  selectedFile?: File;
+  defaultImage: string = 'assets/default-avatar.png'; // Path all'immagine di default
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
-    this.loadUser();
+    this.userService.getUserProfile().subscribe(data => {
+      this.user = data;
+    });
   }
 
-  loadUser(): void {
-    const userId = 1; // ID dell'utente da caricare
-    this.userService.getById(userId).subscribe(
-      (userData: IUser) => {
-        this.user = userData;
-      },
-      error => {
-        console.error('Error loading user', error);
-      }
-    );
+  onUpdate(): void {
+    this.userService.updateUserProfile(this.user).subscribe(response => {
+      // Gestisci la risposta, es. mostrare un messaggio di successo
+    });
   }
 
-  triggerFileInput(): void {
-    this.fileInput.nativeElement.click();
+  onDelete(): void {
+    this.userService.deleteUserProfile().subscribe(response => {
+      // Gestisci la risposta, es. reindirizzare alla pagina di login
+      this.router.navigate(['/login']);
+    });
   }
 
-  onAvatarChange(event: Event): void {
+  onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      if (!file.type.startsWith('image/')) {
-        console.error('File is not an image');
-        return;
-      }
-
-      this.userService.uploadAvatar(this.user!.username, file).subscribe(
-        response => {
-          this.user!.avatar = response;
-        },
-        error => {
-          console.error('Error uploading avatar', error);
-        }
-      );
+      this.selectedFile = input.files[0];
     }
   }
 
-  editUser(): void {
-    // Implementa la logica di modifica dell'utente
-    console.log('Modifica utente');
-  }
-
-  deleteUser(): void {
-    this.userService.deleteUser(this.user!.id).subscribe(
-      () => {
-        console.log('Utente cancellato');
-      },
-      error => {
-        console.error('Error deleting user', error);
-      }
-    );
+  onUpload(): void {
+    if (this.selectedFile) {
+      const fd = new FormData();
+      fd.append('image', this.selectedFile, this.selectedFile.name);
+      this.userService.uploadProfileImage(fd).subscribe(res => {
+        // Aggiorna l'immagine del profilo
+        this.user.avatar = res.imagePath;
+      });
+    }
   }
 }

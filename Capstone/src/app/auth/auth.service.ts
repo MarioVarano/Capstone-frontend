@@ -11,7 +11,7 @@ import { IProfessionista } from '../Models/iprofessionista';
 
 type AccessData = {
   userResponse?: IUserResponse;
-  professionistaResponse?: IUserResponse;
+  loginResponseProfession?: IUserResponse;
 };
 
 @Injectable({
@@ -47,18 +47,23 @@ export class AuthService {
   login(loginData: ILoginData): Observable<AccessData> {
     return this.http.post<AccessData>(this.loginUrl, loginData).pipe(
       tap((data) => {
+
         let token: string | undefined;
-        let user: IUser | IProfessionista | null = null;
+        let user: IUser | null = null;
+        let professionista: IProfessionista | null = null;
         let specializzazione: string | undefined = "";
 
-        specializzazione = data.userResponse?.specializzazione
+        specializzazione = data.loginResponseProfession?.specializzazione;
 
         if (data.userResponse) {
           token = data.userResponse.token;
           user = data.userResponse.user;
-        } else if (data.professionistaResponse) {
-          token = data.professionistaResponse.token;
-          user = data.professionistaResponse.user;
+
+
+        } else if (data.loginResponseProfession) {
+          token = data.loginResponseProfession.token;
+          user = data.loginResponseProfession.professionista;
+
         }
 
         if (token && user && specializzazione) {
@@ -104,6 +109,7 @@ export class AuthService {
     this.authSubject.next(null);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('specializzazione')
     this.router.navigate(['/']);
   }
 

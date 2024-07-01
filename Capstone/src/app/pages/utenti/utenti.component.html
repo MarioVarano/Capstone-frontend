@@ -1,14 +1,22 @@
-<div class="card" *ngIf="user">
-  {{user}}
-  <img [src]="user.avatar || 'default-avatar-url.jpg'" class="card-img-top" alt="User Avatar" (click)="triggerFileInput()" />
-  <input type="file" #fileInput (change)="onAvatarChange($event)" style="display: none;" accept="image/*" />
+<div class="card">
   <div class="card-body">
-    <h5 class="card-title">{{ user.username }}</h5>
-    <p class="card-text">Email: {{ user.email }}</p>
-    <p class="card-text">Nome: {{ user.firstName }}</p>
-    <p class="card-text">Cognome: {{ user.lastName }}</p>
-    <p class="card-text">Città: {{ user.city }}</p>
-    <button (click)="editUser()" class="btn btn-primary">Modifica</button>
-    <button (click)="deleteUser()" class="btn btn-danger">Cancella</button>
+    <h5 class="card-title">User Profile</h5>
+    <form (ngSubmit)="onUpdate()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" [(ngModel)]="user.firstName" name="name">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" [(ngModel)]="user.email" name="email">
+      </div>
+      <div class="form-group">
+        <img [src]="user.avatar || defaultImage" (click)="fileInput.click()" alt="Profile Image" class="img-thumbnail">
+        <input type="file" #fileInput (change)="onFileSelected($event)" hidden>
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+      <button type="button" class="btn btn-success" (click)="onUpload()">Upload Image</button>
+    </form>
+    <button (click)="onDelete()" class="btn btn-danger mt-3">Delete Profile</button>
   </div>
 </div>

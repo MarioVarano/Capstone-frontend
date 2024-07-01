@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { UtentiRoutingModule } from './utenti-routing.module';
 import { UtentiComponent } from './utenti.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { UtentiComponent } from './utenti.component';
   ],
   imports: [
     CommonModule,
-    UtentiRoutingModule
+    UtentiRoutingModule,
+    FormsModule
   ]
 })
 export class UtentiModule { }

@@ -57,21 +57,19 @@ export class HomeComponent {
   login(modal: NgbModalRef) {
     this.authSvc.login(this.loginData).subscribe(
       data => {
-        console.log(data);
 
         modal.dismiss('logged in');
         this.errorMessage = null;
 
         // Determina il tipo di utente e reindirizza alla pagina appropriata
         const currentUser = this.authSvc.authSubject.value;
-        console.log("----------------------------------------------------------------");
+
 
         if (currentUser) {
-          console.log(currentUser);
 
           if (this.authSvc.specializzazione == "PROFESSIONISTA") {
 
-            this.router.navigate(['/professionista']);
+            this.router.navigate(['/professionisti']);
           } else {
             this.router.navigate(['/utenti']);
           }

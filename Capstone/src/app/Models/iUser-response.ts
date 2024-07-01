@@ -4,6 +4,7 @@ import { IProfessionista } from "./iprofessionista";
 export interface IUserResponse {
 
   token: string;
-  user: IUser | IProfessionista
+  user: IUser;
+  professionista: IProfessionista;
   specializzazione: string;
 }

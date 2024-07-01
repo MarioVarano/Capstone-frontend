@@ -1,71 +1,29 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
-import { IUser } from '../Models/iUser';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl: string = environment.registerUserUrl;
-  private userSubj = new BehaviorSubject<IUser[]>([]);
-  public $users = this.userSubj.asObservable();
+  private apiUrl = environment.registerUserUrl; // Assumendo che il backend sia in esecuzione su localhost:8080
 
-  constructor(private http: HttpClient) {
-    this.loadUsers();
+  constructor(private http: HttpClient) {}
+
+  getUserProfile(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/profile`);
   }
 
-  private loadUsers(): void {
-    this.getAll().subscribe((users) => {
-      this.userSubj.next(users);
-    });
+  updateUserProfile(userData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/profile`, userData);
   }
 
-  getAll(): Observable<IUser[]> {
-    return this.http.get<IUser[]>(this.apiUrl);
+  deleteUserProfile(): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/profile`);
   }
 
-  getById(id: number): Observable<IUser> {
-    return this.http.get<IUser>(`${this.apiUrl}/${id}`);
-  }
-
-  deleteUser(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`)
-      .pipe(
-        tap(() => this.loadUsers())
-      );
-  }
-
-  updateUser(id: number, user: Partial<IUser>): Observable<IUser> {
-    return this.http.put<IUser>(`${this.apiUrl}/${id}`, user)
-      .pipe(
-        tap(() => this.loadUsers())
-      );
-  }
-
-  uploadAvatar(username: string, file: File): Observable<string> {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return this.http.post<string>(`${this.apiUrl}/${username}/avatar`, formData)
-      .pipe(
-        tap(() => this.loadUsers())
-      );
-  }
-
-  updateAvatar(username: string, file: File): Observable<string> {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return this.http.put<string>(`${this.apiUrl}/${username}/avatar`, formData)
-      .pipe(
-        tap(() => this.loadUsers())
-      );
-  }
-
-  getUserAvatar(username: string): Observable<string> {
-    return this.http.get<string>(`${this.apiUrl}/${username}/avatar`);
+  uploadProfileImage(imageData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/upload`, imageData);
   }
 }
