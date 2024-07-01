@@ -5,4 +5,5 @@ export interface IUserResponse {
 
   token: string;
   user: IUser | IProfessionista
+  specializzazione: string;
 }

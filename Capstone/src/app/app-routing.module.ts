@@ -1,17 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
-import { ProfessionistaComponent } from './pages/professionista/professionista.component';
 
-const routes: Routes = [{ path: '', component: HomeComponent },
-  { path: 'Professionisti', component: ProfessionistaComponent },
-  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
- }];
+const routes: Routes = [
+  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
+  { path: 'utenti', loadChildren: () => import('./pages/utenti/utenti.module').then(m => m.UtentiModule) },
+  { path: 'professionisti', loadChildren: () => import('./pages/professionisti/professionisti.module').then(m => m.ProfessionistiModule) },
+  { path: '', loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule) }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {
-
-}
+export class AppRoutingModule { }

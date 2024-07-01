@@ -1,0 +1,14 @@
+<div class="card" *ngIf="user">
+  {{user}}
+  <img [src]="user.avatar || 'default-avatar-url.jpg'" class="card-img-top" alt="User Avatar" (click)="triggerFileInput()" />
+  <input type="file" #fileInput (change)="onAvatarChange($event)" style="display: none;" accept="image/*" />
+  <div class="card-body">
+    <h5 class="card-title">{{ user.username }}</h5>
+    <p class="card-text">Email: {{ user.email }}</p>
+    <p class="card-text">Nome: {{ user.firstName }}</p>
+    <p class="card-text">Cognome: {{ user.lastName }}</p>
+    <p class="card-text">Città: {{ user.city }}</p>
+    <button (click)="editUser()" class="btn btn-primary">Modifica</button>
+    <button (click)="deleteUser()" class="btn btn-danger">Cancella</button>
+  </div>
+</div>

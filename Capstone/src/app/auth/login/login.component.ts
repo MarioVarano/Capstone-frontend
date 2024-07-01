@@ -25,7 +25,7 @@ export class LoginComponent {
 
       this.authSvc.login(this.loginData)
       .subscribe(data => {
-        this.router.navigate([''])
+        this.router.navigate(['/utenti'])
       })
 
     }

@@ -12,18 +12,15 @@
           <a class="nav-link active" aria-current="page" routerLink="/">Home</a>
         </li>
         <li class="nav-item" *ngIf="isUserLoggedIn">
-          <a class="nav-link" routerLink="/Film">Film</a>
+          <a class="nav-link" routerLink="/utenti">Profilo</a>
         </li>
         <li class="nav-item" *ngIf="isUserLoggedIn">
-          <a class="nav-link" routerLink="/Preferiti">Preferiti</a>
-        </li>
-        <li class="nav-item" *ngIf="isUserLoggedIn">
-          <a class="nav-link" routerLink="/Utenti">Utenti registrati</a>
-        </li>
-        <li class="nav-item" *ngIf="isUserLoggedIn">
-          <a class="nav-link" routerLink="/Professionisti">Professionisti</a>
+          <a class="nav-link" routerLink="/professionisti">Professionisti</a>
         </li>
       </ul>
+      <span class="me-2 text-white" *ngIf="isUserLoggedIn">
+        <i class="bi bi-person-circle me-2"></i> {{ userName }}
+      </span>
       <button (click)="logout()" *ngIf="isUserLoggedIn" class="btn btn-danger">Esci</button>
     </div>
   </div>

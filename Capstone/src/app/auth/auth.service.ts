@@ -1,28 +1,31 @@
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IUserResponse } from '../Models/iUser-response';
-import { IProfessionista } from '../Models/iprofessionista';
-import { ILoginData } from '../Models/i-login-data';
-import { BehaviorSubject, Observable, catchError, map, tap, throwError } from 'rxjs';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { BehaviorSubject, map, tap, Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment.development';
+import { ILoginData } from '../Models/i-login-data';
 import { IUser } from '../Models/iUser';
-
+import { IUserResponse } from '../Models/iUser-response';
+import { IProfessionista } from '../Models/iprofessionista';
 
 type AccessData = {
-  userResponse?: IUserResponse
-  professionistaResponse?: IUserResponse
-}
+  userResponse?: IUserResponse;
+  professionistaResponse?: IUserResponse;
+};
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   jwtHelper: JwtHelperService = new JwtHelperService();
   authSubject = new BehaviorSubject<IUser | IProfessionista | null>(null);
+  specializzazione = "";
   user$ = this.authSubject.asObservable();
-  isLoggedIn$ = this.user$.pipe(map(user => !!user), tap(user => this.syncIsLoggedIn = user));
+  isLoggedIn$ = this.user$.pipe(
+    map((user) => !!user),
+    tap((user) => (this.syncIsLoggedIn = !!user))
+  );
   syncIsLoggedIn: boolean = false;
 
   constructor(private http: HttpClient, private router: Router) {
@@ -34,22 +37,21 @@ export class AuthService {
   loginUrl: string = environment.loginUrl;
 
   registerUser(newUser: Partial<IUser>): Observable<AccessData> {
-    return this.http.post<AccessData>(this.registerUserUrl, newUser).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.post<AccessData>(this.registerUserUrl, newUser).pipe(catchError(this.handleError));
   }
 
   registerProfessionista(newProfessionista: Partial<IProfessionista>): Observable<AccessData> {
-    return this.http.post<AccessData>(this.registerProfessionistaUrl, newProfessionista).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.post<AccessData>(this.registerProfessionistaUrl, newProfessionista).pipe(catchError(this.handleError));
   }
 
   login(loginData: ILoginData): Observable<AccessData> {
     return this.http.post<AccessData>(this.loginUrl, loginData).pipe(
-      tap(data => {
+      tap((data) => {
         let token: string | undefined;
         let user: IUser | IProfessionista | null = null;
+        let specializzazione: string | undefined = "";
+
+        specializzazione = data.userResponse?.specializzazione
 
         if (data.userResponse) {
           token = data.userResponse.token;
@@ -59,9 +61,12 @@ export class AuthService {
           user = data.professionistaResponse.user;
         }
 
-        if (token && user) {
+        if (token && user && specializzazione) {
+          this.specializzazione = specializzazione;
           this.authSubject.next(user);
-          localStorage.setItem('accessData', JSON.stringify(data));
+          localStorage.setItem('accessToken', token);
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          localStorage.setItem("specializzazione",specializzazione)
           this.autoLogout(token);
         }
       }),
@@ -97,77 +102,40 @@ export class AuthService {
 
   logout() {
     this.authSubject.next(null);
-    localStorage.removeItem('accessData');
-    this.router.navigate(['/auth/login']);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('currentUser');
+    this.router.navigate(['/']);
   }
 
   getAccessToken(): string {
-    const userJson = localStorage.getItem('accessData');
-    if (!userJson) return '';
-
-    const accessData: AccessData = JSON.parse(userJson);
-    let token: string | undefined;
-
-    if (accessData.userResponse && accessData.userResponse.token) {
-      token = accessData.userResponse.token;
-    }
-
-    if (accessData.professionistaResponse && accessData.professionistaResponse.token) {
-      token = accessData.professionistaResponse.token;
-    }
-
+    const token = localStorage.getItem('accessToken');
     if (!token || this.jwtHelper.isTokenExpired(token)) return '';
-
     return token;
   }
 
   autoLogout(jwt: string) {
     const expDate = this.jwtHelper.getTokenExpirationDate(jwt) as Date;
     const expMs = expDate.getTime() - new Date().getTime();
-
     setTimeout(() => {
       this.logout();
     }, expMs);
   }
 
   restoreUser() {
-    const userJson = localStorage.getItem('accessData');
-    if (!userJson) return;
+    const userJson = localStorage.getItem('currentUser');
+    const token = localStorage.getItem('accessToken');
+    if (!userJson || !token || this.jwtHelper.isTokenExpired(token)) return;
 
-    const accessData: AccessData = JSON.parse(userJson);
-    let token: string | undefined;
-    let user: IUser | IProfessionista | null = null;
-
-    if (accessData.userResponse) {
-      token = accessData.userResponse.token;
-      user = accessData.userResponse.user;
-    }
-
-    if (accessData.professionistaResponse) {
-      token = accessData.professionistaResponse.token;
-      user = accessData.professionistaResponse.user;
-    }
-
-    if (!token || this.jwtHelper.isTokenExpired(token)) return;
-
+    const user: IUser | IProfessionista = JSON.parse(userJson);
     this.authSubject.next(user);
     this.autoLogout(token);
   }
 
-  errors(err: any) {
-    switch (err.error) {
-      case 'Email and Password are required':
-        return new Error('Email e password obbligatorie');
-      case 'Email already exists':
-        return new Error('Utente esistente');
-      case 'Email format is invalid':
-        return new Error('Email scritta male');
-      case 'Cannot find user':
-        return new Error('Utente inesistente');
-      default:
-        return new Error('Errore');
+  getUserName(): string {
+    const currentUser = this.authSubject.value;
+    if (currentUser) {
+      return currentUser.username;
     }
+    return '';
   }
-
-
 }

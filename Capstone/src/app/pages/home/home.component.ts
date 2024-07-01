@@ -1,10 +1,7 @@
-import { Component, TemplateRef, ViewChild, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { NgbModal, ModalDismissReasons, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { IUser } from '../../Models/iUser';
-import { IProfessionista } from '../../Models/iprofessionista';
+import { Component, ViewChild } from '@angular/core';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../auth/auth.service';
-import { ILoginData } from '../../Models/i-login-data';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -24,7 +21,7 @@ export class HomeComponent {
   private loginModalRef: NgbModalRef | undefined;
   private registrationModalRef: NgbModalRef | undefined;
 
-  constructor(private modalService: NgbModal, private authSvc: AuthService) {}
+  constructor(private modalService: NgbModal, private authSvc: AuthService, private router: Router) {}
 
   register(modal: NgbModalRef) {
     if (this.isProfessionista) {
@@ -60,8 +57,25 @@ export class HomeComponent {
   login(modal: NgbModalRef) {
     this.authSvc.login(this.loginData).subscribe(
       data => {
+        console.log(data);
+
         modal.dismiss('logged in');
         this.errorMessage = null;
+
+        // Determina il tipo di utente e reindirizza alla pagina appropriata
+        const currentUser = this.authSvc.authSubject.value;
+        console.log("----------------------------------------------------------------");
+
+        if (currentUser) {
+          console.log(currentUser);
+
+          if (this.authSvc.specializzazione == "PROFESSIONISTA") {
+
+            this.router.navigate(['/professionista']);
+          } else {
+            this.router.navigate(['/utenti']);
+          }
+        }
       },
       error => {
         console.error('Login failed', error);
@@ -69,6 +83,7 @@ export class HomeComponent {
       }
     );
   }
+
 
   openLoginModal() {
     if (this.registrationModalRef) {
