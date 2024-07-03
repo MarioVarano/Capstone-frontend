@@ -156,10 +156,14 @@ export class AuthService {
   }
 
   isUserSimple(): boolean {
-    return !!this.authSubject.value && !this.specializzazione;
+    console.log(!!this.authSubject.value, "ciao",  !!this.specializzazione, this.specializzazione);
+
+    return !!this.authSubject.value && this.specializzazione == "UTENTE";
+
   }
 
   isUserProfessional(): boolean {
-    return !!this.authSubject.value && !!this.specializzazione;
+    console.log(!!this.authSubject.value, "ciao2",  !!this.specializzazione);
+    return !!this.authSubject.value && this.specializzazione== "PROFESSIONISTA";
   }
 }

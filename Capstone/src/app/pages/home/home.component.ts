@@ -60,14 +60,11 @@ export class HomeComponent {
   login(modal: NgbModalRef) {
     this.authSvc.login(this.loginData).subscribe(
       data => {
-        console.log(data);
 
         modal.dismiss('logged in');
         this.errorMessage = null;
-        console.log(data.loginResponseProfession?.specializzazione);
 
         if (data.loginResponseProfession?.specializzazione == "PROFESSIONISTA") {
-          console.log(data.loginResponseProfession?.specializzazione);
 
           this.router.navigate(['/professional-profile']);
         } else {
