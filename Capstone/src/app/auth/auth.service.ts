@@ -150,20 +150,63 @@ export class AuthService {
     return '';
   }
 
-  getUserId(): string | null {
-    const user = localStorage.getItem('currentUser');
-    return user ? JSON.parse(user).id : null;
-  }
+
 
   isUserSimple(): boolean {
-    console.log(!!this.authSubject.value, "ciao",  !!this.specializzazione, this.specializzazione);
 
     return !!this.authSubject.value && this.specializzazione == "UTENTE";
 
   }
 
   isUserProfessional(): boolean {
-    console.log(!!this.authSubject.value, "ciao2",  !!this.specializzazione);
     return !!this.authSubject.value && this.specializzazione== "PROFESSIONISTA";
   }
+
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.getAccessToken();
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+  }
+
+  getCurrentUser(): Observable<IUser | IProfessionista> {
+    const userId = this.getUserId();
+    const headers = this.getAuthHeaders();
+    if (this.specializzazione) {
+      return this.http.get<IProfessionista>(`${environment.registerProfessionistaUrl}/${userId}`, { headers }).pipe(
+        tap((response) => {
+          console.log('Server response:', response,userId); // Aggiungi questa linea per debug
+        }),
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            this.router.navigate(['/login']);
+          }
+          console.error('Error response:', error); // Aggiungi questa linea per debug
+          return throwError(() => new Error(error.message));
+        })
+      );
+    } else {
+      return this.http.get<IUser>(`${environment.registerUserUrl}/${userId}`, { headers }).pipe(
+        tap((response) => {
+          console.log('Server response:', response, userId); // Aggiungi questa linea per debug
+        }),
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            this.router.navigate(['users/login']);
+          }
+          console.error('Error response:', error); // Aggiungi questa linea per debug
+          return throwError(() => new Error(error.message));
+        })
+      );
+    }
+  }
+
+  getUserId(): number | null {
+    const user = localStorage.getItem('currentUser');
+
+    user ? console.log(JSON.parse(user).id): null;
+    return user ?  JSON.parse(user).id : null;
+  }
+
 }

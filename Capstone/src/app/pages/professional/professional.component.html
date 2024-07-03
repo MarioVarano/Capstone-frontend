@@ -1,1 +1,14 @@
-<p>professional works!</p>
+<div *ngIf="currentProfessional" class="d-flex justify-content-center mt-5">
+  <div class="card" style="width: 50%">
+    <div class="card-body">
+      <h5 class="card-title">{{ currentProfessional.firstName }} {{ currentProfessional.lastName }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{ currentProfessional.specializzazione }}</h6>
+      <p class="card-text">{{ currentProfessional.descrizione }}</p>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">City: {{ currentProfessional.city }}</li>
+        <li class="list-group-item">Email: {{ currentProfessional.email }}</li>
+      </ul>
+      <button class="btn btn-primary mt-3">Book Appointment</button>
+    </div>
+  </div>
+</div>
