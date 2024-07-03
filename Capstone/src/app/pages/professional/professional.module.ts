@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ProfessionalRoutingModule } from './professional-routing.module';
 import { ProfessionalComponent } from './professional.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -11,7 +12,9 @@ import { ProfessionalComponent } from './professional.component';
   ],
   imports: [
     CommonModule,
-    ProfessionalRoutingModule
+    ProfessionalRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class ProfessionalModule { }

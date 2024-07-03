@@ -15,4 +15,13 @@ export class ProfessionistiService {
   getProfessionistaById(id: number): Observable<IProfessionista> {
     return this.http.get<IProfessionista>(`${this.apiUrl}/${id}`);
   }
+
+
+  updateProfessionista(id: number, professionista: Partial<IProfessionista>): Observable<IProfessionista> {
+    return this.http.put<IProfessionista>(`${this.apiUrl}/${id}`, professionista);
+  }
+
+  deleteProfessionista(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
+  }
 }
