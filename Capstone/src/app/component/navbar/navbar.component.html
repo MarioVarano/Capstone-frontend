@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm ">
+<nav class="navbar navbar-expand-sm">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink="/">
       <img src="../../../assets/1.png" alt="Logo" class="logo">
@@ -11,11 +11,18 @@
         <li class="nav-item" *ngIf="!isUserLoggedIn">
           <a class="nav-link active" aria-current="page" routerLink="/">Home</a>
         </li>
-        <li class="nav-item" *ngIf="isUserLoggedIn">
-          <a class="nav-link" routerLink="/utenti">Profilo</a>
+        <li class="nav-item" *ngIf="!isUserLoggedIn">
+          <a class="nav-link" routerLink="/professionalAll">Professionisti</a>
         </li>
-        <li class="nav-item" *ngIf="isUserLoggedIn">
-          <a class="nav-link" routerLink="/professionisti">Professionisti</a>
+        <li class="nav-item" *ngIf="isUserLoggedIn && isUserSimple">
+          <a class="nav-link" routerLink="/user-profile">Profilo</a>
+        </li>
+        <li class="nav-item" *ngIf="isUserLoggedIn && isUserSimple">
+          <a class="nav-link" routerLink="/professionalAll">Professionisti</a>
+        </li>
+        <li class="nav-item" *ngIf="isUserLoggedIn && isUserProfessional">
+          {{isUserProfessional}}
+          <a class="nav-link" routerLink="/professional-profile">Profilo</a>
         </li>
       </ul>
       <span class="me-2 text-white" *ngIf="isUserLoggedIn">

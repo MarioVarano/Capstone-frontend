@@ -18,9 +18,13 @@ type AccessData = {
   providedIn: 'root',
 })
 export class AuthService {
+  private currentUserSubject: BehaviorSubject<any>;
+  public currentUser: Observable<any>;
+
   jwtHelper: JwtHelperService = new JwtHelperService();
   authSubject = new BehaviorSubject<IUser | IProfessionista | null>(null);
   specializzazione = "";
+  isUserProfessionalLoggedIn = false;  // Nuova proprietà
   user$ = this.authSubject.asObservable();
   isLoggedIn$ = this.user$.pipe(
     map((user) => !!user),
@@ -30,6 +34,9 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {
     this.restoreUser();
+    const storedUser = localStorage.getItem('currentUser');
+    this.currentUserSubject = new BehaviorSubject<any>(storedUser ? JSON.parse(storedUser) : null);
+    this.currentUser = this.currentUserSubject.asObservable();
   }
 
   registerUserUrl: string = environment.registerUserUrl;
@@ -47,31 +54,29 @@ export class AuthService {
   login(loginData: ILoginData): Observable<AccessData> {
     return this.http.post<AccessData>(this.loginUrl, loginData).pipe(
       tap((data) => {
-
         let token: string | undefined;
         let user: IUser | null = null;
         let professionista: IProfessionista | null = null;
-        let specializzazione: string | undefined = "";
 
-        specializzazione = data.loginResponseProfession?.specializzazione;
-
-        if (data.userResponse) {
+        if (data.loginResponseProfession) {
+          token = data.loginResponseProfession.token;
+          professionista = data.loginResponseProfession.professionista;
+          this.specializzazione = data.loginResponseProfession.specializzazione;
+          user = professionista;
+          this.isUserProfessionalLoggedIn = true;  // Aggiorna proprietà
+        } else if (data.userResponse) {
           token = data.userResponse.token;
           user = data.userResponse.user;
-
-
-        } else if (data.loginResponseProfession) {
-          token = data.loginResponseProfession.token;
-          user = data.loginResponseProfession.professionista;
-
+          this.specializzazione = data.userResponse.specializzazione;
+          this.isUserProfessionalLoggedIn = false;  // Aggiorna proprietà
         }
 
-        if (token && user && specializzazione) {
-          this.specializzazione = specializzazione;
+        if (token && user && this.specializzazione) {
           this.authSubject.next(user);
           localStorage.setItem('accessToken', token);
           localStorage.setItem('currentUser', JSON.stringify(user));
-          localStorage.setItem("specializzazione",specializzazione)
+          localStorage.setItem("specializzazione", this.specializzazione);
+
           this.autoLogout(token);
         }
       }),
@@ -109,7 +114,7 @@ export class AuthService {
     this.authSubject.next(null);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('currentUser');
-    localStorage.removeItem('specializzazione')
+    localStorage.removeItem('specializzazione');
     this.router.navigate(['/']);
   }
 
@@ -143,5 +148,18 @@ export class AuthService {
       return currentUser.username;
     }
     return '';
+  }
+
+  getUserId(): string | null {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user).id : null;
+  }
+
+  isUserSimple(): boolean {
+    return !!this.authSubject.value && !this.specializzazione;
+  }
+
+  isUserProfessional(): boolean {
+    return !!this.authSubject.value && !!this.specializzazione;
   }
 }

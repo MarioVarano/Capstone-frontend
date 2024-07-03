@@ -7,7 +7,10 @@ import { AuthService } from '../../auth/auth.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  isUserLoggedIn:boolean = false;
+  isUserLoggedIn: boolean = false;
+  isUserSimple: boolean = false;
+  isUserProfessional: boolean = false;
+
   isNavbarCollapsed = true;
   userName: string | null = null;
 
@@ -16,8 +19,11 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.authSvc.isLoggedIn$.subscribe(data => {
       this.isUserLoggedIn = data;
+      this.isUserSimple = this.authSvc.isUserSimple();
+      this.isUserProfessional = this.authSvc.isUserProfessional();
+
       if (this.isUserLoggedIn) {
-        this.userName = this.authSvc.getUserName(); // Assicurati che il tuo AuthService abbia un metodo getUserName
+        this.userName = this.authSvc.getUserName();
       }
     });
   }

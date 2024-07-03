@@ -1,18 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Assicurati di avere FormsModule
-
-import { HomeRoutingModule } from './home-routing.module';
+import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+const routes: Routes = [
+  { path: '', component: HomeComponent }
+];
 
 @NgModule({
-  declarations: [
-    HomeComponent
-  ],
+  declarations: [HomeComponent],
   imports: [
     CommonModule,
-    HomeRoutingModule,
-    FormsModule // Assicurati di avere FormsModule
+    RouterModule.forChild(routes),
+    FormsModule,
+    ReactiveFormsModule,
+    NgbModule
   ]
 })
 export class HomeModule { }

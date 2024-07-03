@@ -2,18 +2,20 @@ import { Component, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
+import { IUser } from '../../Models/iUser';
+import { IProfessionista } from '../../Models/iprofessionista';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
   @ViewChild('loginModal') loginModal: any;
   @ViewChild('registrationModal') registrationModal: any;
 
-  registerUserData: any = {};
-  registerProfessionistaData: any = {};
+  registerUserData: IUser = {} as IUser;
+  registerProfessionistaData: IProfessionista = {} as IProfessionista;
   loginData: any = {};
   isProfessionista: boolean = false;
   errorMessage: string | null = null;
@@ -27,8 +29,9 @@ export class HomeComponent {
     if (this.isProfessionista) {
       this.registerProfessionistaData = {
         ...this.registerUserData,
-        ...this.registerProfessionistaData
-      } as Partial<any>;
+        specializzazione: this.registerProfessionistaData.specializzazione,
+        descrizione: this.registerProfessionistaData.descrizione
+      } as IProfessionista;
 
       this.authSvc.registerProfessionista(this.registerProfessionistaData).subscribe(
         data => {
@@ -57,22 +60,19 @@ export class HomeComponent {
   login(modal: NgbModalRef) {
     this.authSvc.login(this.loginData).subscribe(
       data => {
+        console.log(data);
 
         modal.dismiss('logged in');
         this.errorMessage = null;
+        console.log(data.loginResponseProfession?.specializzazione);
 
-        // Determina il tipo di utente e reindirizza alla pagina appropriata
-        const currentUser = this.authSvc.authSubject.value;
+        if (data.loginResponseProfession?.specializzazione == "PROFESSIONISTA") {
+          console.log(data.loginResponseProfession?.specializzazione);
 
-
-        if (currentUser) {
-
-          if (this.authSvc.specializzazione == "PROFESSIONISTA") {
-
-            this.router.navigate(['/professionisti']);
-          } else {
-            this.router.navigate(['/utenti']);
-          }
+          this.router.navigate(['/professional-profile']);
+        } else {
+          console.log("FRANZ");
+          this.router.navigate(['/user-profile']);
         }
       },
       error => {
@@ -94,4 +94,3 @@ export class HomeComponent {
     this.registrationModalRef = this.modalService.open(this.registrationModal);
   }
 }
-
