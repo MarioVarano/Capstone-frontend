@@ -44,3 +44,26 @@
 .file-input {
   display: none;
 }
+.bi, .bi-pencil{
+  color:#114384;
+  padding-bottom: 10px;
+}
+
+.modifica{
+  background-color:#114384;
+  color:white;
+}
+
+.elimina{
+  background-color:#65A0C0;
+  color:white;
+}
+
+li, p, h6{
+  color:black;
+}
+
+.rounded-circle{
+  height: 30px;
+  aspect-ratio: 1;
+}

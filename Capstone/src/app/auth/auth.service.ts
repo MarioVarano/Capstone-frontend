@@ -206,7 +206,7 @@ export class AuthService {
     const user = localStorage.getItem('currentUser');
 
     user ? console.log(JSON.parse(user).id): null;
-    return user ?  JSON.parse(user).id : null;
+    return user ? JSON.parse(user).id : null;
   }
 
 }

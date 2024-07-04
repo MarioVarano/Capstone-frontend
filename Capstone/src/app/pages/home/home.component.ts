@@ -16,6 +16,7 @@ export class HomeComponent {
 
   registerUserData: IUser = {} as IUser;
   registerProfessionistaData: IProfessionista = {} as IProfessionista;
+  rememberMe: boolean = false;
   loginData: any = {};
   isProfessionista: boolean = false;
   errorMessage: string | null = null;
@@ -68,7 +69,6 @@ export class HomeComponent {
 
           this.router.navigate(['/professional-profile']);
         } else {
-          console.log("FRANZ");
           this.router.navigate(['/user-profile']);
         }
       },
