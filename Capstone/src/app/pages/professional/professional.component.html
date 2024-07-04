@@ -1,24 +1,28 @@
 <div *ngIf="currentProfessional" class="d-flex justify-content-center mt-5">
-  <div class="card professional-card">
-    <div class="card-body d-flex">
-      <div class="professional-details">
-        <h5 class="card-title">{{ currentProfessional.firstName }} {{ currentProfessional.lastName }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ currentProfessional.specializzazione }}</h6>
-        <p class="card-text">{{ currentProfessional.descrizione }}</p>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">Città: {{ currentProfessional.city }}</li>
-          <li class="list-group-item">Email: {{ currentProfessional.email }}</li>
-        </ul>
-        <button class="btn btn-warning mt-3" (click)="openEditProfileModal()">Modifica Profilo</button>
-        <button class="btn btn-danger mt-3" (click)="deleteProfile()">Cancella Profilo</button>
+  <div class="card" style="width: 50%">
+    <div class="card-body d-flex flex-column">
+      <div class="d-flex justify-content-between">
+        <div>
+          <h5 class="card-title">{{ currentProfessional.firstName }} {{ currentProfessional.lastName }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ currentProfessional.specializzazione }}</h6>
+          <p class="card-text">{{ currentProfessional.descrizione }}</p>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Città: {{ currentProfessional.city }}</li>
+            <li class="list-group-item">Email: {{ currentProfessional.email }}</li>
+          </ul>
+        </div>
+        <div>
+          <img [src]="currentProfessional.avatar || '../../../assets/defaultpng.png'" alt="Avatar" class="img-thumbnail" style="width: 150px; height: 150px;">
+          <button class="btn btn-outline-secondary mt-2" (click)="uploadAvatar()">Change Avatar</button>
+        </div>
       </div>
-      <div class="professional-avatar">
-        <img [src]="currentProfessional.avatar || '../../../assets/defaultpng.png'" alt="Avatar" class="img-thumbnail">
-        <button class="btn btn-outline-secondary mt-2" (click)="uploadAvatar()">Change Avatar</button>
-      </div>
+      <button class="btn btn-warning mt-3" (click)="openEditProfileModal()">Modifica Profilo</button>
+      <button class="btn btn-danger mt-3" (click)="openConfirmDeleteModal()">Cancella Profilo</button>
     </div>
   </div>
 </div>
+
+<!-- Modale di modifica profilo -->
 <ng-template #editProfileModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Modifica Profilo</h4>
@@ -35,8 +39,16 @@
         <input type="text" id="lastName" class="form-control" [(ngModel)]="currentProfessional.lastName" name="lastName" required>
       </div>
       <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" id="username" class="form-control" [(ngModel)]="currentProfessional.username" name="username" required>
+        <label for="specializzazione" class="form-label">Specializzazione</label>
+        <input type="text" id="specializzazione" class="form-control" [(ngModel)]="currentProfessional.specializzazione" name="specializzazione" required>
+      </div>
+      <div class="mb-3">
+        <label for="descrizione" class="form-label">Descrizione</label>
+        <textarea id="descrizione" class="form-control" [(ngModel)]="currentProfessional.descrizione" name="descrizione"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="city" class="form-label">Città</label>
+        <input type="text" id="city" class="form-control" [(ngModel)]="currentProfessional.city" name="city" required>
       </div>
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
@@ -44,19 +56,8 @@
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="text" id="password" class="form-control" [(ngModel)]="currentProfessional.password" name="password" required>
-      </div>
-      <div class="mb-3">
-        <label for="specializzazione" class="form-label">Specializzazione</label>
-        <input type="text" id="specializzazione" class="form-control" [(ngModel)]="currentProfessional.specializzazione" name="specializzazione" required>
-      </div>
-      <div class="mb-3">
-        <label for="descrizione" class="form-label">Descrizione</label>
-        <textarea id="descrizione" class="form-control" [(ngModel)]="currentProfessional.descrizione" name="descrizione" required></textarea>
-      </div>
-      <div class="mb-3">
-        <label for="city" class="form-label">Città</label>
-        <input type="text" id="city" class="form-control" [(ngModel)]="currentProfessional.city" name="city" required>
+        <input type="password" id="password" class="form-control" [(ngModel)]="currentProfessional.password" name="password">
+        <small class="form-text text-muted">Se non la cambi, viene mantenuta la precedente.</small>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annulla</button>
@@ -66,25 +67,18 @@
   </div>
 </ng-template>
 
-
-<div *ngIf="appointments.length > 0; else noAppointments" class="mt-5">
-  <h4>I tuoi appuntamenti:</h4>
-  <div *ngFor="let appointment of appointments" class="card mb-3">
-    <div class="card-body">
-      <h5 class="card-title">{{ appointment.title }}</h5>
-      <p class="card-text">{{ appointment.date }}</p>
-    </div>
+<!-- Modale di conferma eliminazione -->
+<ng-template #confirmDeleteModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Conferma Eliminazione</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
   </div>
-</div>
-
-<ng-template #noAppointments>
-  <p>Non hai appuntamenti.</p>
+  <div class="modal-body">
+    <p>Sei sicuro di voler eliminare il profilo di {{ currentProfessional.firstName }} {{ currentProfessional.lastName }}?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Indietro</button>
+    <button type="button" class="btn btn-danger" (click)="confirmDelete(); modal.dismiss() ;logout()">Conferma</button>
+  </div>
 </ng-template>
 
-<!-- Messaggi -->
-<div *ngIf="message" class="alert alert-success" role="alert">
-  {{ message }}
-</div>
-<div *ngIf="errorMessage" class="alert alert-danger" role="alert">
-  {{ errorMessage }}
-</div>

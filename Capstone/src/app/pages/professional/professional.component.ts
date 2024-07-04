@@ -18,6 +18,8 @@ export class ProfessionalComponent implements OnInit {
 
   @ViewChild('editProfileModal')
   editProfileModal!: TemplateRef<any>;
+  @ViewChild('confirmDeleteModal')
+  confirmDeleteModal!: TemplateRef<any>;
   modalRef: any;
 
   constructor(
@@ -35,16 +37,8 @@ export class ProfessionalComponent implements OnInit {
         next: (currentProfessional) => (this.currentProfessional = currentProfessional),
         error: (err) => console.error('Failed to load professional details', err),
       });
-     // this.loadAppointments(userId);
     }
   }
-
-  //loadAppointments(profId: number): void {
-  //  this.professionistaService.getAppointments(profId).subscribe({
-  //    next: (appointments) => (this.appointments = appointments),
-  //    error: (err) => console.error('Failed to load appointments', err),
-  //  });
-  //}
 
   uploadAvatar(): void {
     // Logica per caricare l'immagine dell'avatar
@@ -54,6 +48,29 @@ export class ProfessionalComponent implements OnInit {
     this.modalRef = this.modalService.open(this.editProfileModal);
   }
 
+  openConfirmDeleteModal(): void {
+    this.modalRef = this.modalService.open(this.confirmDeleteModal);
+  }
+
+  confirmDelete():void {
+    if (this.currentProfessional) {
+      console.log(this.currentProfessional);
+
+      this.professionistaService.deleteProfessionista(this.currentProfessional.id).subscribe({
+        next: (response) => {
+          console.log(response);
+
+          this.message = response;
+          console.log(this.message);
+
+          this.modalRef.close();
+        },
+        error: (err) => {
+          this.errorMessage = err.error.message || 'Failed to delete profile';
+        }
+      });
+    }
+  }
   saveChanges(): void {
     if (this.currentProfessional) {
       this.professionistaService.updateProfessionista(this.currentProfessional.id, this.currentProfessional).subscribe({
@@ -66,18 +83,7 @@ export class ProfessionalComponent implements OnInit {
     }
   }
 
-  deleteProfile(): void {
-    if (this.currentProfessional) {
-      this.professionistaService.deleteProfessionista(this.currentProfessional.id).subscribe({
-        next: (response) => {
-          this.message = response.message;
-          this.authService.logout();
-          this.router.navigate(['/']); // reindirizzare dopo la cancellazione
-        },
-        error: (err) => {
-          this.errorMessage = err.error.message || 'Failed to delete profile';
-        }
-      });
-    }
+  logout() {
+    this.authService.logout();
   }
 }

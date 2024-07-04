@@ -21,7 +21,7 @@ export class ProfessionistiService {
     return this.http.put<IProfessionista>(`${this.apiUrl}/${id}`, professionista);
   }
 
-  deleteProfessionista(id: number): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
+  deleteProfessionista(id: number): Observable<string> {
+    return this.http.delete<string>(`${this.apiUrl}/${id}`);
   }
 }
