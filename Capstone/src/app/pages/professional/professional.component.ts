@@ -15,6 +15,8 @@ export class ProfessionalComponent implements OnInit {
   appointments: any[] = [];
   message: string | null = null;
   errorMessage: string | null = null;
+  selectedFile: File | null = null;
+  avatar: string = "";
 
   @ViewChild('editProfileModal')
   editProfileModal!: TemplateRef<any>;
@@ -34,14 +36,44 @@ export class ProfessionalComponent implements OnInit {
     const userId = this.authService.getUserId();
     if (userId) {
       this.professionistaService.getProfessionistaById(userId).subscribe({
-        next: (currentProfessional) => (this.currentProfessional = currentProfessional),
+        next: (currentProfessional) => {
+          console.log(currentProfessional);
+
+          this.currentProfessional = currentProfessional;
+          console.log(this.currentProfessional.avatar, "fghjk");
+
+          this.avatar = this.currentProfessional.avatar || "";
+          console.log(this.avatar);
+
+        },
         error: (err) => console.error('Failed to load professional details', err),
       });
     }
   }
 
   uploadAvatar(): void {
-    // Logica per caricare l'immagine dell'avatar
+    if (this.selectedFile) {
+      console.log(this.selectedFile, "1", this.currentProfessional.id);
+
+      this.professionistaService.uploadAvatar(this.currentProfessional.id, this.selectedFile).subscribe(
+        url => {
+          console.log(url);
+
+          this.avatar  = this.currentProfessional.avatar = url;
+          console.log(this.currentProfessional.avatar, "2");
+
+          // Aggiorna il profilo dell'utente con il nuovo URL dell'avatar
+          this.saveChanges();
+
+          // Reset the file input
+          this.selectedFile = null;
+          const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+          fileInput.value = '';
+          console.log('Avatar uploaded successfully', url);
+        },
+        error => console.error('Failed to upload avatar', error)
+      );
+    }
   }
 
   openEditProfileModal(): void {
@@ -71,19 +103,47 @@ export class ProfessionalComponent implements OnInit {
       });
     }
   }
+
   saveChanges(): void {
     if (this.currentProfessional) {
       this.professionistaService.updateProfessionista(this.currentProfessional.id, this.currentProfessional).subscribe({
         next: (updatedProfessional) => {
           this.currentProfessional = updatedProfessional;
-          this.modalRef.close();
+          if (this.modalRef) {
+            this.modalRef.close();
+          }
         },
         error: (err) => console.error('Failed to update profile', err),
       });
     }
   }
 
+
   logout() {
     this.authService.logout();
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      this.uploadAvatar();
+    }
+  }
+
+
+  deleteAvatar(): void {
+    this.professionistaService.deleteAvatar(this.currentProfessional.id).subscribe(
+      response => {
+        this.currentProfessional.avatar = ''; // Rimuovi l'URL dell'avatar
+        console.log('Avatar deleted successfully', response);
+      },
+      error => console.error('Failed to delete avatar', error)
+    );
+  }
+
+  triggerFileInput(): void {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    fileInput.click();
   }
 }

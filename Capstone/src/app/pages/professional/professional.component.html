@@ -12,10 +12,10 @@
           </ul>
         </div>
         <div>
-          <img [src]="currentProfessional.avatar || '../../../assets/defaultpng.png'" alt="Avatar" class="img-thumbnail" style="width: 150px; height: 150px;">
-          <button class="btn btn-outline-secondary mt-2" (click)="uploadAvatar()">Change Avatar</button>
+          <img [src]="avatar || '../../../assets/defaultpng.png'" alt="Avatar" class="img-thumbnail">
+          <button class="btn btn-outline-secondary mt-2" (click)="triggerFileInput()">Change Avatar</button>
+          <input type="file" id="fileInput" class="file-input" (change)="onFileSelected($event)">
         </div>
-      </div>
       <button class="btn btn-warning mt-3" (click)="openEditProfileModal()">Modifica Profilo</button>
       <button class="btn btn-danger mt-3" (click)="openConfirmDeleteModal()">Cancella Profilo</button>
     </div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { IProfessionista } from '../Models/iprofessionista';
 
 @Injectable({
@@ -23,5 +23,28 @@ export class ProfessionistiService {
 
   deleteProfessionista(id: number): Observable<string> {
     return this.http.delete<string>(`${this.apiUrl}/${id}`);
+  }
+
+
+  uploadAvatar(id: number, file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ url: string }>(`${this.apiUrl}/${id}/avatar`, formData).pipe(
+      map(response => response.url)
+    );
+  }
+
+  getAvatarUrl(id: number): Observable<string> {
+    return this.http.get<string>(`${this.apiUrl}/${id}/avatar`);
+  }
+
+  deleteAvatar(id: number): Observable<string> {
+    return this.http.delete<string>(`${this.apiUrl}/${id}/avatar`);
+  }
+
+  updateAvatar(id: number, file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.put<string>(`${this.apiUrl}/${id}/avatar`, formData);
   }
 }
