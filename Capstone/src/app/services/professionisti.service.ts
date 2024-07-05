@@ -12,6 +12,11 @@ export class ProfessionistiService {
 
   constructor(private http: HttpClient) { }
 
+
+  getProfessionisti(): Observable<IProfessionista[]> {
+    return this.http.get<IProfessionista[]>(`${this.apiUrl}/all`);
+  }
+
   getProfessionistaById(id: number): Observable<IProfessionista> {
     return this.http.get<IProfessionista>(`${this.apiUrl}/${id}`);
   }

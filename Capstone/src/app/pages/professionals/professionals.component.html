@@ -1,0 +1,18 @@
+<div class="container mt-5">
+  <h2>Professionisti Registrati</h2>
+  <div class="row">
+    <div class="col-12" *ngFor="let professionista of professionisti">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ professionista.firstName }} {{ professionista.lastName }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ professionista.specializzazione }}</h6>
+          <p class="card-text">{{ professionista.descrizione }}</p>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Città: {{ professionista.city }}</li>
+            <li class="list-group-item">Email: {{ professionista.email }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

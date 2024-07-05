@@ -12,7 +12,7 @@
           <a class="nav-link active" aria-current="page" routerLink="/">Home</a>
         </li>
         <li class="nav-item" *ngIf="!isUserLoggedIn || isUserLoggedIn && isUserSimple">
-          <a class="nav-link" routerLink="/professionalAll">Professionisti</a>
+          <a class="nav-link" routerLink="/professionals">Professionisti</a>
         </li>
         <li class="nav-item" *ngIf="isUserLoggedIn && isUserSimple">
           <a class="nav-link" routerLink="/user-profile">Profilo</a>
