@@ -37,13 +37,10 @@ export class ProfessionalComponent implements OnInit {
     if (userId) {
       this.professionistaService.getProfessionistaById(userId).subscribe({
         next: (currentProfessional) => {
-          console.log(currentProfessional);
 
           this.currentProfessional = currentProfessional;
-          console.log(this.currentProfessional.avatar, "fghjk");
 
           this.avatar = this.currentProfessional.avatar || "";
-          console.log(this.avatar);
 
         },
         error: (err) => console.error('Failed to load professional details', err),
@@ -57,10 +54,8 @@ export class ProfessionalComponent implements OnInit {
 
       this.professionistaService.uploadAvatar(this.currentProfessional.id, this.selectedFile).subscribe(
         url => {
-          console.log(url);
 
           this.avatar  = this.currentProfessional.avatar = url;
-          console.log(this.currentProfessional.avatar, "2");
 
           // Aggiorna il profilo dell'utente con il nuovo URL dell'avatar
           this.saveChanges();
@@ -86,7 +81,6 @@ export class ProfessionalComponent implements OnInit {
 
   confirmDelete():void {
     if (this.currentProfessional) {
-      console.log(this.currentProfessional);
 
       this.professionistaService.deleteProfessionista(this.currentProfessional.id).subscribe({
         next: (response) => {

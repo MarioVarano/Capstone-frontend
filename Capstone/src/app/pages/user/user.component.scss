@@ -1,0 +1,69 @@
+.card {
+  width: 50%;
+
+  .card-body {
+    flex-direction: column;
+
+    .card-title {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-subtitle {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-text {
+      margin-bottom: 1rem;
+    }
+
+    .list-group-item {
+      font-size: 0.875rem;
+    }
+  }
+
+  .img-thumbnail {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .btn {
+    &.mt-2 {
+      margin-top: 0.5rem;
+    }
+
+    &.mt-3 {
+      margin-top: 1rem;
+    }
+  }
+}
+
+.file-input {
+  display: none;
+}
+.bi, .bi-pencil{
+  color:#114384;
+  padding-bottom: 10px;
+}
+
+.modifica{
+  background-color:#114384;
+  color:white;
+}
+
+.elimina{
+  background-color:#65A0C0;
+  color:white;
+}
+
+li, p, h6{
+  color:black;
+}
+
+.rounded-circle{
+  height: 30px;
+  aspect-ratio: 1;
+}
