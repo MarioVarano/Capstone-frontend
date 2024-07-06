@@ -9,6 +9,7 @@ const routes: Routes = [
   { path: 'user-profile', loadChildren: () => import('./pages/user/user.module').then(m => m.UserModule), canActivate: [AuthGuard, UserGuard] },
   { path: 'professional-profile', loadChildren: () => import('./pages/professional/professional.module').then(m => m.ProfessionalModule), canActivate: [AuthGuard, ProfessionalGuard] },
   { path: 'professionals', loadChildren: () => import('./pages/professionals/professionals.module').then(m => m.ProfessionalsModule) },
+  { path: 'appointment', loadChildren: () => import('./pages/appointment/appointment.module').then(m => m.AppointmentModule) },
 ];
 
 @NgModule({

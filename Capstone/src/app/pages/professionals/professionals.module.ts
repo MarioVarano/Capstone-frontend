@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ProfessionalsRoutingModule } from './professionals-routing.module';
 import { ProfessionalsComponent } from './professionals.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { ProfessionalsComponent } from './professionals.component';
   ],
   imports: [
     CommonModule,
-    ProfessionalsRoutingModule
+    ProfessionalsRoutingModule,
+    FormsModule
   ]
 })
 export class ProfessionalsModule { }

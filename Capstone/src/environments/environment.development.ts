@@ -2,5 +2,6 @@ export const environment = {
   registerUserUrl: 'http://localhost:8080/users',
   base: 'http://localhost:8080',
   registerProfessionistaUrl: 'http://localhost:8080/professionista',
-  loginUrl: 'http://localhost:8080/users/login'
+  loginUrl: 'http://localhost:8080/users/login',
+  appuntamentoUrl: 'http://localhost:8080/api/appuntamento',
 };

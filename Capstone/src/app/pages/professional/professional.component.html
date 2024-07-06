@@ -10,7 +10,7 @@
       <!-- Foto e Change Avatar -->
       <div class="d-flex mb-3">
         <img [src]="avatar || '../../../assets/defaultpng.png'" alt="Avatar" class="img-thumbnail" style="width: 150px; height: 150px;">
-        <button class="btn btn-outline-secondary ms-3 p-2 align-self-start rounded-circle" (click)="triggerFileInput()">
+        <button class="btn btn-outline-secondary ms-3 p-2 align-self-start " (click)="triggerFileInput()">
           <i class="bi bi-pencil text-black"></i>
         </button>
         <input type="file" id="fileInput" class="file-input" (change)="onFileSelected($event)">
