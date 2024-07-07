@@ -1,9 +1,12 @@
+import { AppointmentService } from '../../services/appuntamenti.service';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IUser } from '../../Models/iUser';
+import { IAppuntamento } from '../../Models/iappuntamento';
+import { IUtenteAppuntamentoDto } from '../../Models/i-utente-appuntamento-dto';
 
 @Component({
   selector: 'app-user',
@@ -12,6 +15,8 @@ import { IUser } from '../../Models/iUser';
 })
 export class UserComponent implements OnInit {
   currentUser!: IUser;
+  errorMessage: string | null = null;
+  appointments: IUtenteAppuntamentoDto[] = [];
   selectedFile: File | null = null;
   avatar: string | null = null;
 
@@ -25,6 +30,7 @@ export class UserComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private userService: UserService,
+    private appointmentService: AppointmentService,
     private modalService: NgbModal,
     private router: Router
   ) {}
@@ -36,11 +42,24 @@ export class UserComponent implements OnInit {
         next: (currentUser) => {
           this.currentUser = currentUser;
           this.avatar = currentUser.avatar || "";
+          this.loadUserAppointments(userId);
+
 
         },
         error: (err) => console.error('Failed to load user details', err),
       });
     }
+  }
+
+  loadUserAppointments(userId: number): void {
+    this.appointmentService.getAppointmentsByUserId(userId).subscribe({
+      next: (appointments) => {
+        this.appointments = appointments;
+        console.log(this.appointments);
+
+      },
+      error: (err) => console.error('Failed to load user appointments', err),
+    });
   }
 
   uploadAvatar(): void {

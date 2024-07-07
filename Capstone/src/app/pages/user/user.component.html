@@ -26,12 +26,39 @@
 
       <!-- Bottoni di modifica ed elimina -->
       <div class="d-flex justify-content-end mt-3">
-        <button class="btn modifica btn-sm me-2" (click)="openEditProfileModal()">Modifica</button>
-        <button class="btn elimina btn-sm" (click)="openConfirmDeleteModal()">Elimina</button>
+        <button class="btn btn-sm me-2 modifica" (click)="openEditProfileModal()">Modifica</button>
+        <button class="btn btn-sm elimina" (click)="openConfirmDeleteModal()">Elimina</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Appuntamenti utente -->
+<div *ngIf="appointments.length; else noAppointments" class="d-flex justify-content-center mt-5">
+  <div class="card w-75">
+    <div class="card-body">
+      <h3 class="text-center">I Miei Appuntamenti</h3>
+      <div *ngFor="let appointment of appointments" class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Appuntamento con {{ appointment.professionista.firstName }} {{ appointment.professionista.lastName }}</h5>
+          <p class="card-text">Specializzato in: {{ appointment.professionista.specializzazione }}</p>
+          <p class="card-text">Data: {{ appointment.dataPrenotazione }}</p>
+          <p class="card-text">Ora: {{ appointment.oraPrenotazione }}</p>
+          <p class="card-text">Confermato: {{ appointment.confermato ? 'Sì' : 'No' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noAppointments>
+  <div class="d-flex justify-content-center mt-5">
+    <div class="alert alert-info text-center w-75" role="alert">
+      Non hai appuntamenti prenotati.
+    </div>
+  </div>
+</ng-template>
+
 <!-- Modale di modifica profilo -->
 <ng-template #editProfileModal let-modal>
   <div class="modal-header">
@@ -83,4 +110,5 @@
     <button type="button" class="btn btn-danger" (click)="confirmDelete(); modal.dismiss() ;logout()">Conferma</button>
   </div>
 </ng-template>
+
 

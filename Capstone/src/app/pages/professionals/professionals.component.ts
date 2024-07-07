@@ -5,6 +5,8 @@ import { IAppuntamento } from '../../Models/iappuntamento';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AppointmentService } from '../../services/appuntamenti.service';
 import { AuthService } from '../../auth/auth.service';
+import { IGeneralResponse } from '../../Models/igeneral-response';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-professionals',
@@ -22,8 +24,10 @@ export class ProfessionalsComponent implements OnInit {
     oraPrenotazione: '',
     confermato: false
   };
+  isLoggedIn = false;
+
   modalRef: NgbModalRef | null = null;
-  errorMessage: string = '';
+  errorMessage: string | null= null;
 
 
   @ViewChild('appointmentModal')
@@ -33,10 +37,14 @@ export class ProfessionalsComponent implements OnInit {
     private authService: AuthService,  // Assicurati di avere un metodo per ottenere l'ID dell'utente loggato
     private professionistiService: ProfessionistiService,
     private modalService: NgbModal,
-    private appointmentService: AppointmentService
+    private appointmentService: AppointmentService,
+    private router: Router
+
   ) {}
 
   ngOnInit(): void {
+    this.isLoggedIn = !!this.authService.getUserId();
+
     this.professionistiService.getProfessionisti().subscribe({
       next: (data) => {
         this.professionisti = data;
@@ -51,33 +59,34 @@ export class ProfessionalsComponent implements OnInit {
   }
 
   bookAppointment(): void {
-    const userId = this.authService.getUserId();
-    console.log(userId);
-
-    if (this.selectedProfessional && this.appointment.dataPrenotazione && this.appointment.oraPrenotazione && userId !== null) {
+    if (this.selectedProfessional && this.appointment.dataPrenotazione && this.appointment.oraPrenotazione) {
       const appointmentData: IAppuntamento = {
         idProfessionista: this.selectedProfessional.id,
-
-        idUtente: userId,
-
+        idUtente: this.authService.getUserId() ?? 0,
         dataPrenotazione: this.appointment.dataPrenotazione,
         oraPrenotazione: this.appointment.oraPrenotazione,
         confermato: false
       };
-
       this.appointmentService.bookAppointment(appointmentData).subscribe({
-        next: (response) => {
-          console.log('Appointment booked successfully', response);
-          if (this.modalRef) {
-            this.modalRef.close();
+        next: (response: IGeneralResponse<IAppuntamento>) => {
+          if (response.errorMessage) {
+            this.errorMessage = response.errorMessage;
+          } else {
+            console.log('Appointment booked successfully', response);
+            this.errorMessage = null;
+            if (this.modalRef) {
+              this.modalRef.close();
+            }
           }
         },
         error: (err) => {
           console.error('Failed to book appointment', err);
-          this.errorMessage = err.error
-        },
+          this.errorMessage = err;
+        }
       });
     }
-
+  }
+  redirectToHome(): void {
+    this.router.navigate(['/']);
   }
 }

@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { IAppuntamento } from '../Models/iappuntamento';
+import { IGeneralResponse } from '../Models/igeneral-response';
+import { IUtenteAppuntamentoDto } from '../Models/i-utente-appuntamento-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +22,20 @@ export class AppointmentService {
     return this.http.get<IAppuntamento[]>(this.apiUrl);
   }
 
-  bookAppointment(appointmentData: Partial<IAppuntamento>): Observable<Partial<IAppuntamento>> {
-    return this.http.post<IAppuntamento>(this.apiUrl, appointmentData);
+  bookAppointment(appointment: IAppuntamento): Observable<IGeneralResponse<IAppuntamento>> {
+    return this.http.post<IGeneralResponse<IAppuntamento>>(this.apiUrl, appointment).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = error.error?.errorMessage || 'Something went wrong';
+    }
+    return throwError(errorMessage);
   }
 
   updateAppointment(id: number, appointmentData: IAppuntamento): Observable<IAppuntamento> {
@@ -32,8 +46,8 @@ export class AppointmentService {
     return this.http.delete<string>(`${this.apiUrl}/${id}`);
   }
 
-  getAppointmentsByUserId(userId: number): Observable<IAppuntamento[]> {
-    return this.http.get<IAppuntamento[]>(`${this.apiUrl}/utente/${userId}`);
+  getAppointmentsByUserId(userId: number): Observable<IUtenteAppuntamentoDto[]> {
+    return this.http.get<IUtenteAppuntamentoDto[]>(`${this.apiUrl}/utente/${userId}`);
   }
 
   getAppointmentsByProfessionalId(professionalId: number): Observable<IAppuntamento[]> {

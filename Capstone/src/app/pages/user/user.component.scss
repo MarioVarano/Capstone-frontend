@@ -1,5 +1,6 @@
 .card {
   width: 50%;
+  transition: transform 0.2s;
 
   .card-body {
     flex-direction: column;
@@ -7,6 +8,7 @@
     .card-title {
       font-size: 1.5rem;
       margin-bottom: 0.5rem;
+      font-weight: bold;
     }
 
     .card-subtitle {
@@ -67,3 +69,25 @@ li, p, h6{
   height: 30px;
   aspect-ratio: 1;
 }
+.container {
+  margin-top: 2rem;
+}
+
+
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.alert {
+  margin-top: 2rem;
+}
+
+.btn-outline-secondary {
+  padding: 0.5rem;
+}
+
+.d-flex.justify-content-center {
+  margin-top: 1rem;
+}
+
