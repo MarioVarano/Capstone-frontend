@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment.development';
 import { IAppuntamento } from '../Models/iappuntamento';
 import { IGeneralResponse } from '../Models/igeneral-response';
 import { IUtenteAppuntamentoDto } from '../Models/i-utente-appuntamento-dto';
+import { IAppuntamentoResponse } from '../Models/i-appuntamento-response';
 
 @Injectable({
   providedIn: 'root'
@@ -38,13 +39,19 @@ export class AppointmentService {
     return throwError(errorMessage);
   }
 
-  updateAppointment(id: number, appointmentData: IAppuntamento): Observable<IAppuntamento> {
-    return this.http.put<IAppuntamento>(`${this.apiUrl}/${id}`, appointmentData);
-  }
+ // Service per aggiornare l'appuntamento
+ updateAppointment(id: number, appointmentData: Partial<IAppuntamento>): Observable<IGeneralResponse<IAppuntamentoResponse>> {
+  return this.http.put<IGeneralResponse<IAppuntamentoResponse>>(`${this.apiUrl}/${id}`, appointmentData).pipe(
+    catchError(this.handleError)
+  );
+}
+
+
 
   deleteAppointment(id: number): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/${id}`);
+    return this.http.delete<string>(`${this.apiUrl}/${id}`,{responseType: 'text' as 'json' });
   }
+
 
   getAppointmentsByUserId(userId: number): Observable<IUtenteAppuntamentoDto[]> {
     return this.http.get<IUtenteAppuntamentoDto[]>(`${this.apiUrl}/utente/${userId}`);

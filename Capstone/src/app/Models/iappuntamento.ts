@@ -4,5 +4,5 @@ export interface IAppuntamento {
   idUtente?: number;
   dataPrenotazione: string;
   oraPrenotazione: string;
-  confermato: boolean;
+  confermato?: boolean;
 }

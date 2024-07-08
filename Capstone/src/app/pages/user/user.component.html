@@ -45,6 +45,10 @@
           <p class="card-text">Data: {{ appointment.dataPrenotazione }}</p>
           <p class="card-text">Ora: {{ appointment.oraPrenotazione }}</p>
           <p class="card-text">Confermato: {{ appointment.confermato ? 'Sì' : 'No' }}</p>
+          <div class="d-flex justify-content-end">
+            <button class="btn modifica btn-sm me-2" (click)="openEditAppointmentModal(appointment)">Modifica</button>
+            <button class="btn elimina btn-sm" (click)="confirmDeleteAppointment(appointment.id)">Elimina</button>
+          </div>
         </div>
       </div>
     </div>
@@ -110,5 +114,46 @@
     <button type="button" class="btn btn-danger" (click)="confirmDelete(); modal.dismiss() ;logout()">Conferma</button>
   </div>
 </ng-template>
+
+
+<!-- Modale per modificare l'appuntamento -->
+<ng-template #editAppointmentModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Modifica Appuntamento</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="saveAppointmentChanges()">
+      <div class="mb-3">
+        <label for="date" class="form-label">Data</label>
+        <input type="date" id="date" class="form-control" [(ngModel)]="selectedAppointment!.dataPrenotazione" name="date" required>
+      </div>
+      <div class="mb-3">
+        <label for="time" class="form-label">Ora</label>
+        <input type="time" id="time" class="form-control" [(ngModel)]="selectedAppointment!.oraPrenotazione" name="time" required>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annulla</button>
+        <button type="submit" class="btn btn-primary" (click)="modal.dismiss()">Salva</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Modale per confermare la cancellazione -->
+<ng-template #confirmDeleteModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Conferma Eliminazione</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p>Sei sicuro di voler eliminare questo appuntamento?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annulla</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('delete')">Elimina</button>
+  </div>
+</ng-template>
+
 
 

@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IUser } from '../../Models/iUser';
 import { IAppuntamento } from '../../Models/iappuntamento';
 import { IUtenteAppuntamentoDto } from '../../Models/i-utente-appuntamento-dto';
+import { IAppuntamentoResponse } from '../../Models/i-appuntamento-response';
 
 @Component({
   selector: 'app-user',
@@ -19,6 +20,11 @@ export class UserComponent implements OnInit {
   appointments: IUtenteAppuntamentoDto[] = [];
   selectedFile: File | null = null;
   avatar: string | null = null;
+  selectedAppointment: Partial<IAppuntamento> | null = null;
+
+
+  @ViewChild('editAppointmentModal') editAppointmentModal!: TemplateRef<any>;
+  @ViewChild('confirmDeleteModal') confirmDeleteAppointmentModal!: TemplateRef<any>;
 
   @ViewChild('editProfileModal')
   editProfileModal!: TemplateRef<any>;
@@ -53,12 +59,91 @@ export class UserComponent implements OnInit {
 
   loadUserAppointments(userId: number): void {
     this.appointmentService.getAppointmentsByUserId(userId).subscribe({
-      next: (appointments) => {
+      next: (appointments: IUtenteAppuntamentoDto[]) => {
         this.appointments = appointments;
         console.log(this.appointments);
 
       },
       error: (err) => console.error('Failed to load user appointments', err),
+    });
+  }
+
+  openEditAppointmentModal(appointment: IUtenteAppuntamentoDto): void {
+    console.log("-----------------------------", appointment);
+
+    this.selectedAppointment = {
+      id: appointment.id,
+      idProfessionista: appointment.professionista.id!,
+      idUtente:this.currentUser.id!,
+      dataPrenotazione: appointment.dataPrenotazione!,
+      oraPrenotazione: appointment.oraPrenotazione!,
+      confermato: appointment.confermato!
+    }; // Clona l'appuntamento selezionato
+    this.modalService.open(this.editAppointmentModal);
+    console.log("-----------------------------", this.selectedAppointment);
+  }
+
+
+  saveAppointmentChanges(): void {
+    if (this.selectedAppointment) {
+      const payload: IAppuntamento = {
+        id: this.selectedAppointment.id!,
+        idProfessionista: this.selectedAppointment.idProfessionista!,
+        idUtente: this.selectedAppointment.idUtente!,
+        dataPrenotazione: this.selectedAppointment.dataPrenotazione!,
+        oraPrenotazione: this.selectedAppointment.oraPrenotazione!,
+        confermato: this.selectedAppointment.confermato!
+      };
+      console.log(payload);
+
+      if (payload.id !== undefined) {
+        this.appointmentService.updateAppointment(payload.id, payload).subscribe({
+          next: (response) => {
+            const updatedAppointment = response.data;
+            if (updatedAppointment) {
+              const index = this.appointments.findIndex(a => a.id === payload.id);
+              if (index !== -1) {
+                this.appointments[index] = {
+                  ...this.appointments[index],
+                  dataPrenotazione: updatedAppointment.dataPrenotazione,
+                  oraPrenotazione: updatedAppointment.oraPrenotazione,
+                  confermato: this.appointments[index].confermato, // Mantieni lo stato confermato
+                  professionista: this.appointments[index].professionista // Mantieni i dettagli del professionista
+                };
+              }
+              if (this.modalRef) {
+                this.modalRef.close();
+              }
+            } else {
+              console.error('Failed to update appointment: ', response.errorMessage);
+            }
+          },
+          error: (err) => {
+            console.error('Failed to update appointment', err);
+            if (err.status === 401) {
+              alert('Sessione scaduta. Effettua il login.');
+            }
+          },
+        });
+      } else {
+        console.error('Appointment ID is undefined.');
+      }
+    } else {
+      console.error('Selected appointment or its ID is undefined.');
+    }
+  }
+
+
+
+
+
+
+  confirmDeleteAppointment(appointmentId: number): void {
+    this.appointmentService.deleteAppointment(appointmentId).subscribe({
+      next: () => {
+        this.appointments = this.appointments.filter(a => a.id !== appointmentId);
+      },
+      error: (err) => console.error('Failed to delete appointment', err),
     });
   }
 
