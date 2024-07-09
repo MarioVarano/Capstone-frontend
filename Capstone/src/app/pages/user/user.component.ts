@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IUser } from '../../Models/iUser';
 import { IAppuntamento } from '../../Models/iappuntamento';
 import { IUtenteAppuntamentoDto } from '../../Models/i-utente-appuntamento-dto';
+import { IGeneralResponse } from '../../Models/igeneral-response';
 
 @Component({
   selector: 'app-user',
@@ -97,28 +98,34 @@ export class UserComponent implements OnInit {
 
       if (payload.id !== undefined) {
         this.appointmentService.updateAppointment(payload.id, payload).subscribe({
-          next: (response) => {
-            const updatedAppointment = response.data;
-            if (updatedAppointment) {
-              const index = this.appointments.findIndex(a => a.id === payload.id);
-              if (index !== -1) {
-                this.appointments[index] = {
-                  ...this.appointments[index],
-                  dataPrenotazione: updatedAppointment.dataPrenotazione,
-                  oraPrenotazione: updatedAppointment.oraPrenotazione,
-                  confermato: this.appointments[index].confermato, // Mantieni lo stato confermato
-                  professionista: this.appointments[index].professionista // Mantieni i dettagli del professionista
-                };
-              }
-              if (this.modalRef) {
-                this.modalRef.close();
-              }
+          next: (response: IGeneralResponse<IAppuntamento>) => {
+            if (response.errorMessage) {
+              this.errorMessage = response.errorMessage;
             } else {
-              console.error('Failed to update appointment: ', response.errorMessage);
+              const updatedAppointment = response.data;
+              if (updatedAppointment) {
+                const index = this.appointments.findIndex(a => a.id === payload.id);
+                if (index !== -1) {
+                  this.appointments[index] = {
+                    ...this.appointments[index],
+                    dataPrenotazione: updatedAppointment.dataPrenotazione,
+                    oraPrenotazione: updatedAppointment.oraPrenotazione,
+                    confermato: this.appointments[index].confermato, // Mantieni lo stato confermato
+                    professionista: this.appointments[index].professionista // Mantieni i dettagli del professionista
+                  };
+                }
+                if (this.modalRef) {
+                  this.modalRef.close();
+                }
+                this.errorMessage = null;
+              } else {
+                console.error('Failed to update appointment: ', response.errorMessage);
+              }
             }
           },
           error: (err) => {
             console.error('Failed to update appointment', err);
+            this.errorMessage = err;
             if (err.status === 401) {
               alert('Sessione scaduta. Effettua il login.');
             }
@@ -131,6 +138,7 @@ export class UserComponent implements OnInit {
       console.error('Selected appointment or its ID is undefined.');
     }
   }
+
 
 
 

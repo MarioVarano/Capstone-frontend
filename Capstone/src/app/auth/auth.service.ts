@@ -33,10 +33,14 @@ export class AuthService {
   syncIsLoggedIn: boolean = false;
 
   constructor(private http: HttpClient, private router: Router) {
+        this.getUserAfterRefresh();
+
     this.restoreUser();
     const storedUser = localStorage.getItem('currentUser');
     this.currentUserSubject = new BehaviorSubject<any>(storedUser ? JSON.parse(storedUser) : null);
     this.currentUser = this.currentUserSubject.asObservable();
+
+
   }
 
   registerUserUrl: string = environment.registerUserUrl;
@@ -209,4 +213,25 @@ export class AuthService {
     return user ? JSON.parse(user).id : null;
   }
 
+  getUserAfterRefresh(): void {
+    const user = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+    const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
+    if (!user || !token) return;
+
+    if (this.jwtHelper.isTokenExpired(token)) return;
+
+    const accessData: AccessData = {
+      userResponse: JSON.parse(user)
+    };
+
+    const userObject = accessData.userResponse?.user || accessData.loginResponseProfession?.professionista;
+
+    if (userObject) {
+      this.authSubject.next(userObject);
+      this.specializzazione = accessData.userResponse?.specializzazione || '';
+      this.isUserProfessionalLoggedIn = this.specializzazione === 'PROFESSIONISTA';
+      this.syncIsLoggedIn = true;
+      this.autoLogout(token);
+    }
+  }
 }

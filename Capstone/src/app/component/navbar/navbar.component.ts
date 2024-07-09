@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
@@ -26,6 +26,19 @@ export class NavbarComponent implements OnInit {
         this.userName = this.authSvc.getUserName();
       }
     });
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    const navbar = document.querySelector('.navbar') as HTMLElement;
+    const logo = document.querySelector('.logo') as HTMLElement;
+    if (window.pageYOffset > 50) {
+      navbar.classList.add('scrolled');
+      logo.classList.add('large');
+    } else {
+      navbar.classList.remove('scrolled');
+      logo.classList.remove('large');
+    }
   }
 
   logout() {

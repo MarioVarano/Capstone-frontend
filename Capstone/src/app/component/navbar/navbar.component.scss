@@ -1,18 +1,26 @@
-
-
-
-.navbar{
-  background-color:#114384;
-
+.navbar {
+  background-color: #114384;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  transition: background-color 0.3s;
 }
 
+.navbar.scrolled {
+  background-color: #0c2e5a; /* Colore di sfondo quando la pagina è scorsa */
+}
 
 .nav-link.active,
 .nav-link {
-  color:white;
+  color: white;
 }
 
-
-.logo{
+.logo {
   width: 170px;
+  transition: width 0.3s, height 0.3s; /* Aggiungi una transizione per il logo */
+}
+
+.logo.large {
+  width: 200px; /* Dimensione del logo quando la pagina è scorsa */
 }
