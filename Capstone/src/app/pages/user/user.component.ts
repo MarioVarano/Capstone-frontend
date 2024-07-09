@@ -7,7 +7,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IUser } from '../../Models/iUser';
 import { IAppuntamento } from '../../Models/iappuntamento';
 import { IUtenteAppuntamentoDto } from '../../Models/i-utente-appuntamento-dto';
-import { IAppuntamentoResponse } from '../../Models/i-appuntamento-response';
 
 @Component({
   selector: 'app-user',

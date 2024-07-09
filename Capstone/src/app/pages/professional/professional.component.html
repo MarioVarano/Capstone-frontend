@@ -1,7 +1,7 @@
+<!-- Profile Information -->
 <div *ngIf="currentProfessional" class="d-flex justify-content-center mt-5">
   <div class="card" style="width: 30%">
     <div class="card-body d-flex flex-column">
-
       <!-- Nome e Cognome -->
       <div class="mb-3">
         <h5 class="card-title">{{ currentProfessional.firstName }} {{ currentProfessional.lastName }}</h5>
@@ -10,7 +10,7 @@
       <!-- Foto e Change Avatar -->
       <div class="d-flex mb-3">
         <img [src]="avatar || '../../../assets/defaultpng.png'" alt="Avatar" class="img-thumbnail" style="width: 150px; height: 150px;">
-        <button class="btn btn-outline-secondary ms-3 p-2 align-self-start " (click)="triggerFileInput()">
+        <button class="btn btn-outline-secondary ms-3 p-2 align-self-start rounded-circle" (click)="triggerFileInput()">
           <i class="bi bi-pencil text-black"></i>
         </button>
         <input type="file" id="fileInput" class="file-input" (change)="onFileSelected($event)">
@@ -18,8 +18,6 @@
 
       <!-- Dati personali -->
       <div class="mb-3">
-        <h6 class="card-subtitle mb-2 text-muted">{{ currentProfessional.specializzazione }}</h6>
-        <p class="card-text">{{ currentProfessional.descrizione }}</p>
         <ul class="list-group list-group-flush">
           <li class="list-group-item px-0">Città: {{ currentProfessional.city }}</li>
           <li class="list-group-item px-0">Email: {{ currentProfessional.email }}</li>
@@ -28,12 +26,43 @@
 
       <!-- Bottoni di modifica ed elimina -->
       <div class="d-flex justify-content-end mt-3">
-        <button class="btn modifica btn-sm me-2" (click)="openEditProfileModal()">Modifica</button>
-        <button class="btn elimina btn-sm" (click)="openConfirmDeleteModal()">Elimina</button>
+        <button class="btn btn-sm me-2 modifica" (click)="openEditProfileModal()">Modifica</button>
+        <button class="btn btn-sm elimina" (click)="openConfirmDeleteModal()">Elimina</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Appuntamenti professionista -->
+<div *ngIf="appointments.length; else noAppointments" class="d-flex justify-content-center mt-5">
+  <div class="card w-75">
+    <div class="card-body">
+      <h3 class="text-center">I Miei Appuntamenti</h3>
+      <div *ngFor="let appointment of appointments" class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Appuntamento con {{ appointment.utente.firstName }} {{ appointment.utente.lastName }}</h5>
+          <p class="card-text">Email: {{ appointment.utente.email }}</p>
+          <p class="card-text">Data: {{ appointment.dataPrenotazione }}</p>
+          <p class="card-text">Ora: {{ appointment.oraPrenotazione }}</p>
+          <p class="card-text">Confermato: {{ appointment.confermato ? 'Sì' : 'No' }}</p>
+          <div class="d-flex justify-content-end">
+            <button class="btn modifica btn-sm me-2" (click)="openEditAppointmentModal(appointment)">Modifica</button>
+            <button class="btn elimina btn-sm" (click)="confirmDeleteAppointment(appointment.id)">Elimina</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noAppointments>
+  <div class="d-flex justify-content-center mt-5">
+    <div class="alert alert-info text-center w-75" role="alert">
+      Non hai appuntamenti prenotati.
+    </div>
+  </div>
+</ng-template>
+
 <!-- Modale di modifica profilo -->
 <ng-template #editProfileModal let-modal>
   <div class="modal-header">
@@ -49,14 +78,6 @@
       <div class="mb-3">
         <label for="lastName" class="form-label">Cognome</label>
         <input type="text" id="lastName" class="form-control" [(ngModel)]="currentProfessional.lastName" name="lastName" required>
-      </div>
-      <div class="mb-3">
-        <label for="specializzazione" class="form-label">Specializzazione</label>
-        <input type="text" id="specializzazione" class="form-control" [(ngModel)]="currentProfessional.specializzazione" name="specializzazione" required>
-      </div>
-      <div class="mb-3">
-        <label for="descrizione" class="form-label">Descrizione</label>
-        <textarea id="descrizione" class="form-control" [(ngModel)]="currentProfessional.descrizione" name="descrizione"></textarea>
       </div>
       <div class="mb-3">
         <label for="city" class="form-label">Città</label>
@@ -94,3 +115,41 @@
   </div>
 </ng-template>
 
+<!-- Modale per modificare l'appuntamento -->
+<ng-template #editAppointmentModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Modifica Appuntamento</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="saveAppointmentChanges()">
+      <div class="mb-3">
+        <label for="date" class="form-label">Data</label>
+        <input type="date" id="date" class="form-control" [(ngModel)]="selectedAppointment!.dataPrenotazione" name="date" required>
+      </div>
+      <div class="mb-3">
+        <label for="time" class="form-label">Ora</label>
+        <input type="time" id="time" class="form-control" [(ngModel)]="selectedAppointment!.oraPrenotazione" name="time" required>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annulla</button>
+        <button type="submit" class="btn btn-primary" (click)="modal.dismiss()">Salva</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Modale per confermare la cancellazione -->
+<ng-template #confirmDeleteModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Conferma Eliminazione</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p>Sei sicuro di voler eliminare questo appuntamento?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annulla</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('delete')">Elimina</button>
+  </div>
+</ng-template>

@@ -6,6 +6,7 @@ import { IAppuntamento } from '../Models/iappuntamento';
 import { IGeneralResponse } from '../Models/igeneral-response';
 import { IUtenteAppuntamentoDto } from '../Models/i-utente-appuntamento-dto';
 import { IAppuntamentoResponse } from '../Models/i-appuntamento-response';
+import { IProfessionistaAppuntamentoDto } from '../Models/i-professionista-appuntamento-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -57,8 +58,8 @@ export class AppointmentService {
     return this.http.get<IUtenteAppuntamentoDto[]>(`${this.apiUrl}/utente/${userId}`);
   }
 
-  getAppointmentsByProfessionalId(professionalId: number): Observable<IAppuntamento[]> {
-    return this.http.get<IAppuntamento[]>(`${this.apiUrl}/professionista/${professionalId}`);
+  getAppointmentsByProfessionalId(professionalId: number): Observable<IProfessionistaAppuntamentoDto[]> {
+    return this.http.get<IProfessionistaAppuntamentoDto[]>(`${this.apiUrl}/professionista/${professionalId}`);
   }
 
   confirmAppointment(id: number): Observable<string> {

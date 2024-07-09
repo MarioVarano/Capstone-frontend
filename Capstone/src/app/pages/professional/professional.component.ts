@@ -1,9 +1,12 @@
+import { AppointmentService } from '../../services/appuntamenti.service';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { IProfessionista } from '../../Models/iprofessionista';
 import { ProfessionistiService } from '../../services/professionisti.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { IProfessionistaAppuntamentoDto } from '../../Models/i-professionista-appuntamento-dto';
+import { IAppuntamento } from '../../Models/iappuntamento';
 
 @Component({
   selector: 'app-professional',
@@ -12,22 +15,26 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ProfessionalComponent implements OnInit {
   currentProfessional!: IProfessionista;
-  appointments: any[] = [];
+  appointments: IProfessionistaAppuntamentoDto[] = [];
   message: string | null = null;
   errorMessage: string | null = null;
   selectedFile: File | null = null;
   avatar: string = "";
+  selectedAppointment: Partial<IProfessionistaAppuntamentoDto> | null = null;
 
   @ViewChild('editProfileModal')
   editProfileModal!: TemplateRef<any>;
   @ViewChild('confirmDeleteModal')
   confirmDeleteModal!: TemplateRef<any>;
+  @ViewChild('editAppointmentModal')
+  editAppointmentModal!: TemplateRef<any>;
   modalRef: any;
 
   constructor(
     private authService: AuthService,
     private route: ActivatedRoute,
     private professionistaService: ProfessionistiService,
+    private appointmentService: AppointmentService,
     private modalService: NgbModal,
     private router: Router
   ) {}
@@ -37,15 +44,96 @@ export class ProfessionalComponent implements OnInit {
     if (userId) {
       this.professionistaService.getProfessionistaById(userId).subscribe({
         next: (currentProfessional) => {
-
           this.currentProfessional = currentProfessional;
-
           this.avatar = this.currentProfessional.avatar || "";
-
+          this.loadProfessionalAppointments(userId);
         },
         error: (err) => console.error('Failed to load professional details', err),
       });
     }
+  }
+
+  loadProfessionalAppointments(professionalId: number): void {
+    this.appointmentService.getAppointmentsByProfessionalId(professionalId).subscribe({
+      next: (appointments: IProfessionistaAppuntamentoDto[]) => {
+        this.appointments = appointments;
+        console.log(this.appointments);
+      },
+      error: (err) => console.error('Failed to load professional appointments', err),
+    });
+  }
+
+  openEditAppointmentModal(appointment: IProfessionistaAppuntamentoDto): void {
+    console.log("-----------------------------", appointment);
+
+    this.selectedAppointment = {
+      id: appointment.id,
+      dataPrenotazione: appointment.dataPrenotazione!,
+      oraPrenotazione: appointment.oraPrenotazione!,
+      confermato: appointment.confermato!,
+      utente: appointment.utente
+    }; // Clona l'appuntamento selezionato
+    this.modalService.open(this.editAppointmentModal);
+    console.log("-----------------------------", this.selectedAppointment);
+  }
+
+  saveAppointmentChanges(): void {
+    if (this.selectedAppointment) {
+      const payload: IAppuntamento = {
+        id: this.selectedAppointment.id!,
+        idProfessionista: this.currentProfessional.id!,
+        idUtente: this.selectedAppointment.utente!.id!,
+        confermato: this.selectedAppointment.confermato!, // Mantieni lo stato confermato
+        dataPrenotazione: this.selectedAppointment.dataPrenotazione!,
+        oraPrenotazione: this.selectedAppointment.oraPrenotazione!
+      };
+      console.log(payload);
+
+      if (payload.id !== undefined) {
+        this.appointmentService.updateAppointment(payload.id, payload).subscribe({
+          next: (response) => {
+            const updatedAppointment = response.data;
+            if (updatedAppointment) {
+              const index = this.appointments.findIndex(a => a.id === payload.id);
+              if (index !== -1) {
+                this.appointments[index] = {
+                  ...this.appointments[index],
+                  dataPrenotazione: updatedAppointment.dataPrenotazione,
+                  oraPrenotazione: updatedAppointment.oraPrenotazione,
+                  confermato: this.appointments[index].confermato, // Mantieni lo stato confermato
+                  utente: this.appointments[index].utente // Mantieni i dettagli dell'utente
+                };
+              }
+              if (this.modalRef) {
+                this.modalRef.close();
+              }
+            } else {
+              console.error('Failed to update appointment: ', response.errorMessage);
+            }
+          },
+          error: (err) => {
+            console.error('Failed to update appointment', err);
+            if (err.status === 401) {
+              alert('Sessione scaduta. Effettua il login.');
+            }
+          },
+        });
+      } else {
+        console.error('Appointment ID is undefined.');
+      }
+    } else {
+      console.error('Selected appointment or its ID is undefined.');
+    }
+  }
+
+
+  confirmDeleteAppointment(appointmentId: number): void {
+    this.appointmentService.deleteAppointment(appointmentId).subscribe({
+      next: () => {
+        this.appointments = this.appointments.filter(a => a.id !== appointmentId);
+      },
+      error: (err) => console.error('Failed to delete appointment', err),
+    });
   }
 
   uploadAvatar(): void {
@@ -54,7 +142,6 @@ export class ProfessionalComponent implements OnInit {
 
       this.professionistaService.uploadAvatar(this.currentProfessional.id, this.selectedFile).subscribe(
         url => {
-
           this.avatar  = this.currentProfessional.avatar = url;
 
           // Aggiorna il profilo dell'utente con il nuovo URL dell'avatar
@@ -81,6 +168,7 @@ export class ProfessionalComponent implements OnInit {
 
   confirmDelete():void {
     if (this.currentProfessional) {
+      console.log(this.currentProfessional);
 
       this.professionistaService.deleteProfessionista(this.currentProfessional.id).subscribe({
         next: (response) => {
@@ -112,7 +200,6 @@ export class ProfessionalComponent implements OnInit {
     }
   }
 
-
   logout() {
     this.authService.logout();
   }
@@ -124,7 +211,6 @@ export class ProfessionalComponent implements OnInit {
       this.uploadAvatar();
     }
   }
-
 
   deleteAvatar(): void {
     this.professionistaService.deleteAvatar(this.currentProfessional.id).subscribe(
