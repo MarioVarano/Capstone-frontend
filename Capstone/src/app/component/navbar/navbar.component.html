@@ -9,26 +9,22 @@
     <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
         <li class="nav-item" *ngIf="!isUserLoggedIn">
-          <a class="nav-link active" aria-current="page" routerLink="/">Home</a>
+          <a class="nav-link active" aria-current="page" routerLink="/"><i class="bi bi-house-fill text-white"></i> Home</a>
         </li>
         <li class="nav-item" *ngIf="!isUserLoggedIn || isUserLoggedIn && isUserSimple">
-          <a class="nav-link" routerLink="/professionals">Professionisti</a>
+          <a class="nav-link" routerLink="/professionals"><i class="bi bi-people-fill text-white"></i> Professionisti</a>
         </li>
         <li class="nav-item" *ngIf="isUserLoggedIn && isUserSimple">
-          <a class="nav-link" routerLink="/user-profile">Profilo</a>
+          <a class="nav-link" routerLink="/user-profile"><i class="bi bi-person-fill text-white"></i> Profilo</a>
         </li>
-        <!--<li class="nav-item" *ngIf="isUserLoggedIn && isUserSimple">
-          <a class="nav-link" routerLink="/professionalAll">Professionisti</a>
-        </li>
-      -->
         <li class="nav-item" *ngIf="isUserLoggedIn && isUserProfessional">
-          <a class="nav-link" routerLink="/professional-profile">Profilo</a>
+          <a class="nav-link" routerLink="/professional-profile"><i class="bi bi-person-badge-fill text-white"></i> Profilo</a>
         </li>
       </ul>
       <span class="me-2 text-white" *ngIf="isUserLoggedIn">
         <i class="bi bi-person-circle me-2"></i> {{ userName }}
       </span>
-      <button (click)="logout()" *ngIf="isUserLoggedIn" class="btn btn-danger">Esci</button>
+      <button (click)="logout()" *ngIf="isUserLoggedIn" class="btn btn-link text-white p-0"><i class="bi bi-box-arrow-right"></i></button>
     </div>
   </div>
 </nav>

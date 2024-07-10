@@ -41,6 +41,7 @@ export class ProfessionalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     const userId = this.authService.getUserId();
     if (userId) {
       this.professionistaService.getProfessionistaById(userId).subscribe({
@@ -48,7 +49,9 @@ export class ProfessionalComponent implements OnInit {
           this.currentProfessional = currentProfessional;
           this.avatar = this.currentProfessional.avatar || "";
           this.loadProfessionalAppointments(userId);
+
         },
+
         error: (err) => console.error('Failed to load professional details', err),
       });
     }

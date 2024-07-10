@@ -21,7 +21,7 @@ canActivate(
     map(user => {
       const isUserProfessional = !!user && !!this.authService.specializzazione;
       if (!isUserProfessional) {
-        this.router.navigate(['/user-profile']);
+        this.router.navigate(['']);
       }
       return isUserProfessional;
     })

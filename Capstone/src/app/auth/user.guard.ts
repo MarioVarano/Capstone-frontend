@@ -20,7 +20,7 @@ canActivate(
     map(user => {
       const isUserSimple = !!user && this.authService.specializzazione == "UTENTE";
       if (!isUserSimple) {
-        this.router.navigate(['/professional-profile']);
+        this.router.navigate(['']);
       }
       return isUserSimple;
     })
