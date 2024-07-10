@@ -114,10 +114,9 @@ export class UserComponent implements OnInit {
                     professionista: this.appointments[index].professionista // Mantieni i dettagli del professionista
                   };
                 }
-                if (this.modalRef) {
-                  this.modalRef.close();
-                }
                 this.errorMessage = null;
+                this.modalService.dismissAll();
+
               } else {
                 console.error('Failed to update appointment: ', response.errorMessage);
               }

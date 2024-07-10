@@ -123,6 +123,9 @@
   </div>
   <div class="modal-body">
     <form (ngSubmit)="saveAppointmentChanges()">
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
       <div class="mb-3">
         <label for="date" class="form-label">Data</label>
         <input type="date" id="date" class="form-control" [(ngModel)]="selectedAppointment!.dataPrenotazione" name="date" required>
@@ -133,11 +136,14 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annulla</button>
-        <button type="submit" class="btn btn-primary" (click)="modal.dismiss()">Salva</button>
+        <button type="submit" class="btn btn-primary">Salva</button>
       </div>
     </form>
   </div>
 </ng-template>
+
+
+
 
 <!-- Modale per confermare la cancellazione -->
 <ng-template #confirmDeleteModal let-modal>
