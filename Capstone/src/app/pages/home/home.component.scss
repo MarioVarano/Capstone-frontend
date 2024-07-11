@@ -1,19 +1,14 @@
-.btn-lg, .me-2, .btn{
+.btn-lg, .me-2, .btn {
   background-color: #114384;
   color: white;
-
 }
-
-
 
 .info-section {
   padding: 40px 0; /* Spaziatura verticale */
   background-image: url('/assets/MKMM-2.png');
-
   background-size: cover; /* Copre l'intera area della sezione */
   background-position: center; /* Centra l'immagine */
   background-repeat: no-repeat; /* Non ripete l'immagine */
-
 
   .container {
     max-width: 1200px;
@@ -59,3 +54,26 @@
   }
 }
 
+.modal-header, .modal-footer {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  border-top: 1px solid #e9ecef;
+}
+
+.modal-title {
+  color: #114384;
+}
+
+.btn-close {
+  color: #114384;
+}
+
+.btn-outline-secondary {
+  background-color: #65A0C0;
+  border-color: #65A0C0;
+}
+
+.btn-primary {
+  background-color: #114384;
+  border-color: #114384;
+}

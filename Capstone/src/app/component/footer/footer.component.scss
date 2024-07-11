@@ -1,21 +1,14 @@
 .footer {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
   text-align: center;
   background-color: #114384; // Cambia questo colore secondo il tuo design
   padding: 20px 0;
 
-  .col-md-4 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
   .nav-link img.logo {
     max-width: 180px; // Dimensione del logo
-    margin-right: 10px;
+    margin-bottom: 15px;
   }
 
   .text-white {
@@ -23,19 +16,25 @@
   }
 
   .nav {
-    margin-top: 10px;
+    margin-bottom: 10px;
 
     li {
       margin-left: 15px;
 
       a {
-        color: #6c757d;
-        font-size: 1.2rem;
+        color: #ffffff;
+        font-size: 1.5rem;
 
         &:hover {
           color: #000;
         }
       }
     }
+  }
+
+  .d-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
