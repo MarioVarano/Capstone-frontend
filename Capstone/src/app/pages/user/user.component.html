@@ -1,18 +1,18 @@
 <div *ngIf="currentUser" class="d-flex justify-content-center mt-5">
-  <div class="card" style="width: 30%">
+  <!-- Card Immagine -->
+  <div class="card user-image-card me-3" (click)="triggerFileInput()">
+    <div class="card-body text-center p-0">
+      <img [src]="avatar || '../../../assets/defaultpng.png'" alt="Avatar" class="img-thumbnail">
+      <input type="file" id="fileInput" class="file-input" (change)="onFileSelected($event)">
+    </div>
+  </div>
+
+  <!-- Card Dati Utente -->
+  <div class="card user-details-card">
     <div class="card-body d-flex flex-column">
       <!-- Nome e Cognome -->
       <div class="mb-3">
         <h5 class="card-title">{{ currentUser.firstName }} {{ currentUser.lastName }}</h5>
-      </div>
-
-      <!-- Foto e Change Avatar -->
-      <div class="d-flex mb-3">
-        <img [src]="avatar || '../../../assets/defaultpng.png'" alt="Avatar" class="img-thumbnail" style="width: 150px; height: 150px;">
-        <button class="btn btn-outline-secondary ms-3 p-2 align-self-start rounded-circle" (click)="triggerFileInput()">
-          <i class="bi bi-pencil text-black"></i>
-        </button>
-        <input type="file" id="fileInput" class="file-input" (change)="onFileSelected($event)">
       </div>
 
       <!-- Dati personali -->
@@ -33,20 +33,22 @@
 </div>
 
 <!-- Appuntamenti utente -->
-<div *ngIf="appointments.length; else noAppointments" class="d-flex justify-content-center mt-5">
-  <div class="card w-75">
-    <div class="card-body">
-      <h3 class="text-center">I Miei Appuntamenti</h3>
-      <div *ngFor="let appointment of appointments" class="card mb-3">
+<div *ngIf="appointments.length; else noAppointments" class="container mt-5">
+  <h3 class="text-center">I Miei Appuntamenti</h3>
+  <div class="row justify-content-center">
+    <div class="col-md-8 mt-3" *ngFor="let appointment of appointments">
+      <div class="card mb-3 appointment-card">
         <div class="card-body">
-          <h5 class="card-title">Appuntamento con {{ appointment.professionista.firstName }} {{ appointment.professionista.lastName }}</h5>
-          <p class="card-text">Specializzato in: {{ appointment.professionista.specializzazione }}</p>
+          <h5 class="card-title">
+            Appuntamento con {{ appointment.professionista.firstName }} {{ appointment.professionista.lastName }}
+          </h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ appointment.professionista.specializzazione }}</h6>
           <p class="card-text">Data: {{ appointment.dataPrenotazione }}</p>
           <p class="card-text">Ora: {{ appointment.oraPrenotazione }}</p>
           <p class="card-text">Confermato: {{ appointment.confermato ? 'Sì' : 'No' }}</p>
           <div class="d-flex justify-content-end">
-            <button class="btn modifica btn-sm me-2" (click)="openEditAppointmentModal(appointment)">Modifica</button>
-            <button class="btn elimina btn-sm" (click)="confirmDeleteAppointment(appointment.id)">Elimina</button>
+            <button class="btn btn-primary me-2" (click)="openEditAppointmentModal(appointment)">Modifica</button>
+            <button class="btn elimina" (click)="confirmDeleteAppointment(appointment.id)">Elimina</button>
           </div>
         </div>
       </div>
@@ -114,7 +116,6 @@
   </div>
 </ng-template>
 
-
 <!-- Modale per modificare l'appuntamento -->
 <ng-template #editAppointmentModal let-modal>
   <div class="modal-header">
@@ -136,16 +137,14 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annulla</button>
-
-        <button  type="submit" class="btn btn-primary">Salva</button>
+        <button type="submit" class="btn btn-primary">Salva</button>
       </div>
     </form>
   </div>
 </ng-template>
 
-
 <!-- Modale per confermare la cancellazione -->
-<ng-template #confirmDeleteModal let-modal>
+<ng-template #confirmDeleteAppointmentModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Conferma Eliminazione</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
@@ -158,6 +157,3 @@
     <button type="button" class="btn btn-danger" (click)="modal.close('delete')">Elimina</button>
   </div>
 </ng-template>
-
-
-
