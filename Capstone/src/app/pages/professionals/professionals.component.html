@@ -1,7 +1,15 @@
 <div class="container mt-5">
-  <h2 class="text-center mb-4">Professionisti Registrati</h2>
-  <div class="row">
-    <div class="col-12" *ngFor="let professionista of professionisti">
+  <h2 class="text-center mb-4">I Nostri Medici:</h2>
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <input type="text" class="form-control" placeholder="Cerca per città" [(ngModel)]="searchCity" (ngModelChange)="onSearch()">
+    </div>
+    <div class="col-md-6">
+      <input type="text" class="form-control" placeholder="Cerca per specializzazione" [(ngModel)]="searchSpecializzazione" (ngModelChange)="onSearch()">
+    </div>
+  </div>
+  <div class="row" *ngIf="professionistiFiltrati.length > 0; else noResults">
+    <div class="col-12" *ngFor="let professionista of professionistiFiltrati">
       <div class="card mb-3">
         <div class="card-body">
           <div class="row">
@@ -28,7 +36,13 @@
       </div>
     </div>
   </div>
+  <ng-template #noResults>
+    <div class="alert alert-info w-100 text-center" role="alert">
+      Non ci sono professionisti per questa ricerca.
+    </div>
+  </ng-template>
 </div>
+
 
 <!-- Modale per prenotare un appuntamento -->
 <ng-template #appointmentModal let-modal>

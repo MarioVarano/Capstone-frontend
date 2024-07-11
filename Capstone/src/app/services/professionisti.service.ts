@@ -52,4 +52,12 @@ export class ProfessionistiService {
     formData.append('file', file);
     return this.http.put<string>(`${this.apiUrl}/${id}/avatar`, formData);
   }
+
+  searchByCity(city: string): Observable<IProfessionista[]> {
+    return this.http.get<IProfessionista[]>(`${this.apiUrl}/city/${city}`);
+  }
+
+  searchBySpecializzazione(specializzazione: string): Observable<IProfessionista[]> {
+    return this.http.get<IProfessionista[]>(`${this.apiUrl}/specializzazione/${specializzazione}`);
+  }
 }

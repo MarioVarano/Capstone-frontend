@@ -11,45 +11,58 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-professionals',
   templateUrl: './professionals.component.html',
-  styleUrl: './professionals.component.scss'
+  styleUrls: ['./professionals.component.scss']
 })
 export class ProfessionalsComponent implements OnInit {
   professionisti: IProfessionista[] = [];
+  professionistiFiltrati: IProfessionista[] = [];
   selectedProfessional: IProfessionista | null = null;
   appointment: Partial<IAppuntamento> = {
     id: 0,
-    idProfessionista:0,
-    idUtente:0,
+    idProfessionista: 0,
+    idUtente: 0,
     dataPrenotazione: '',
     oraPrenotazione: '',
     confermato: false
   };
   isLoggedIn = false;
+  searchCity: string = '';
+  searchSpecializzazione: string = '';
 
   modalRef: NgbModalRef | null = null;
-  errorMessage: string | null= null;
-
+  errorMessage: string | null = null;
 
   @ViewChild('appointmentModal')
   appointmentModal!: TemplateRef<any>;
 
   constructor(
-    private authService: AuthService,  // Assicurati di avere un metodo per ottenere l'ID dell'utente loggato
+    private authService: AuthService,
     private professionistiService: ProfessionistiService,
     private modalService: NgbModal,
     private appointmentService: AppointmentService,
     private router: Router
-
   ) {}
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.authService.getUserId();
+    this.getProfessionisti();
+  }
 
+  getProfessionisti(): void {
     this.professionistiService.getProfessionisti().subscribe({
       next: (data) => {
         this.professionisti = data;
+        this.professionistiFiltrati = data;
       },
       error: (err) => console.error('Failed to load professionals', err)
+    });
+  }
+
+  onSearch(): void {
+    this.professionistiFiltrati = this.professionisti.filter(professionista => {
+      const matchesCity = this.searchCity ? professionista.city.toLowerCase().includes(this.searchCity.toLowerCase()) : true;
+      const matchesSpecializzazione = this.searchSpecializzazione ? professionista.specializzazione.toLowerCase().includes(this.searchSpecializzazione.toLowerCase()) : true;
+      return matchesCity && matchesSpecializzazione;
     });
   }
 
@@ -86,6 +99,7 @@ export class ProfessionalsComponent implements OnInit {
       });
     }
   }
+
   redirectToHome(): void {
     this.router.navigate(['/']);
   }
