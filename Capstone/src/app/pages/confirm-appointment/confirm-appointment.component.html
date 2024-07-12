@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="card">
+    <h2>Conferma Appuntamento</h2>
+    <div *ngIf="loading">Verifica del tuo appuntamento in corso...</div>
+    <div *ngIf="!loading && success" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="!loading && success === false" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>

@@ -64,14 +64,4 @@ I contributi sono benvenuti! Per favore, fai un fork del repository e invia una 
 ## 📧 Contatti
 Per qualsiasi domanda o informazione, contattami all'indirizzo email mariovarano1995@gmail.com
 
-GitHub - Frontend Repository
-GitHub - Backend Repository
 
-
-
-
-
-
-
-
-Link Capstone BackEnd: https://github.com/MarioVarano/Capstone.git

@@ -62,7 +62,7 @@ export class AppointmentService {
     return this.http.get<IProfessionistaAppuntamentoDto[]>(`${this.apiUrl}/professionista/${professionalId}`);
   }
 
-  confirmAppointment(id: number): Observable<string> {
-    return this.http.get<string>(`${this.apiUrl}/confirm/${id}`);
+  confirmAppointment(appointmentId: number): Observable<string> {
+    return this.http.get<string>(`${this.apiUrl}/confirm/${appointmentId}`,{ responseType: 'text' as 'json'});
   }
 }
