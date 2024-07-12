@@ -1,27 +1,72 @@
-# Capstone
+EpicHealth
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
+Descrizione del progetto
+EpicHealth è una piattaforma completa progettata per mettere in contatto utenti e professionisti della sanità. Gli utenti possono registrarsi, cercare professionisti per città o specializzazione, visualizzare i dettagli dei professionisti e richiedere appuntamenti. I professionisti ricevono notifiche via email per le richieste di appuntamento e possono confermarle tramite un link. Sia gli utenti che i professionisti possono gestire i propri dati personali e appuntamenti tramite una dashboard personale.
 
-## Development server
+🛠️ Tecnologie utilizzate
+Frontend: Angular e ngBootstrap
+Backend: Java e Spring Boot
+Database: PostgreSQL
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+✨ Funzionalità principali
+Registrazione e login per utenti e professionisti
+Visualizzazione e filtro dei professionisti registrati
+Richiesta e gestione degli appuntamenti
+Notifiche via email per le richieste di appuntamento
+Dashboard per la gestione dei dati personali e degli appuntamenti
+Operazioni CRUD complete per utenti e professionisti
+Design responsivo
+Endpoint API RESTful
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+⚙️ Prerequisiti
+Node.js e npm
+Angular CLI
+Java 17 o superiore (per il backend)
+Maven 3.6.0 o superiore (per il backend)
+PostgreSQL
 
-## Build
+📥 Clona il repository
+Per il Frontend:git clone https://github.com/MarioVarano/Capstone-frontend.git
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+Per il Backend:git clone https://github.com/MarioVarano/Capstone.git
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+📦 Installa le dipendenze
+Per installare le dipendenze necessarie per il frontend Angular, esegui:
+npm install
+ng serve
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-## Further help
+Per il backend, esegui:
+mvn clean install
+mvn spring-boot:run
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+🛠️ Configura PostgreSQL
+Crea un database chiamato backend e configura il file application.properties nel backend con le tue credenziali PostgreSQL.
+
+properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/backend
+spring.datasource.username=your_db_username
+spring.datasource.password=your_db_password
+spring.jpa.hibernate.ddl-auto=update
+
+
+🤝 Contributi
+I contributi sono benvenuti! Per favore, fai un fork del repository e invia una pull request per qualsiasi miglioramento o correzione di bug.
+
+📧 Contatti
+Per qualsiasi domanda o informazione, contattami all'indirizzo email mariovarano1995@gmail.com
+
+GitHub - Frontend Repository
+GitHub - Backend Repository
+
+
+
+
+
+
+
+
+Link Capstone BackEnd: https://github.com/MarioVarano/Capstone.git
