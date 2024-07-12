@@ -9,7 +9,6 @@ import { AppointmentService } from '../../services/appuntamenti.service';
 })
 export class ConfirmAppointmentComponent implements OnInit {
 
-  appointmentId: number | null = null;
   loading = true;
   success: boolean | null = null;
   errorMessage: string | null = null;
@@ -22,23 +21,24 @@ export class ConfirmAppointmentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const idParam = this.route.snapshot.queryParamMap.get('appointmentId');
-    this.appointmentId = idParam ? +idParam : null;
-    if (this.appointmentId) {
-      this.appointmentService.confirmAppointment(this.appointmentId).subscribe({
+    const appointmentId = this.route.snapshot.queryParamMap.get('id');
+    if (appointmentId) {
+      this.appointmentService.confirmAppointment(+appointmentId).subscribe({
         next: (response) => {
-          console.log(response);
           this.success = true;
           this.loading = false;
-          this.successMessage = 'Appuntamento confermato con successo!';
+          this.successMessage = response;
           setTimeout(() => {
             this.router.navigate(['/']);
-          }, 3000); // Reindirizza alla homepage dopo 3 secondi
+          }, 3000);
         },
         error: (err) => {
-          console.error('Errore nella conferma dell\'appuntamento', err);
+          if (err.status === 401) {
+            this.errorMessage = 'Errore nella conferma dell\'appuntamento. Devi effettuare il login per vedere la conferma.';
+          } else {
+            this.errorMessage = 'Errore nella conferma dell\'appuntamento. Riprova più tardi.';
+          }
           this.success = false;
-          this.errorMessage = 'Errore nella conferma dell\'appuntamento. Riprova più tardi.';
           this.loading = false;
         }
       });
@@ -46,6 +46,7 @@ export class ConfirmAppointmentComponent implements OnInit {
       this.loading = false;
       this.errorMessage = 'ID dell\'appuntamento non valido.';
     }
-  }
+}
+
 
 }
