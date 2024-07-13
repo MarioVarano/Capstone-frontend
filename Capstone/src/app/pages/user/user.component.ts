@@ -77,6 +77,7 @@ export class UserComponent implements OnInit {
       idUtente:this.currentUser.id!,
       dataPrenotazione: appointment.dataPrenotazione!,
       oraPrenotazione: appointment.oraPrenotazione!,
+      descrizione: appointment.descrizione!, // Aggiunta della descrizione
       confermato: appointment.confermato!
     }; // Clona l'appuntamento selezionato
     this.modalService.open(this.editAppointmentModal);
@@ -92,6 +93,7 @@ export class UserComponent implements OnInit {
         idUtente: this.selectedAppointment.idUtente!,
         dataPrenotazione: this.selectedAppointment.dataPrenotazione!,
         oraPrenotazione: this.selectedAppointment.oraPrenotazione!,
+        descrizione: this.selectedAppointment.descrizione!, // Aggiunta della descrizione
         confermato: this.selectedAppointment.confermato!
       };
       console.log(payload);
@@ -110,6 +112,7 @@ export class UserComponent implements OnInit {
                     ...this.appointments[index],
                     dataPrenotazione: updatedAppointment.dataPrenotazione,
                     oraPrenotazione: updatedAppointment.oraPrenotazione,
+                    descrizione: updatedAppointment.descrizione, // Aggiunta della descrizione
                     confermato: this.appointments[index].confermato, // Mantieni lo stato confermato
                     professionista: this.appointments[index].professionista // Mantieni i dettagli del professionista
                   };

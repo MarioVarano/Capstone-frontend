@@ -23,6 +23,7 @@ export class ProfessionalsComponent implements OnInit {
     idUtente: 0,
     dataPrenotazione: '',
     oraPrenotazione: '',
+    descrizione: '',  // Aggiungi questa riga
     confermato: false
   };
   isLoggedIn = false;
@@ -78,6 +79,7 @@ export class ProfessionalsComponent implements OnInit {
         idUtente: this.authService.getUserId() ?? 0,
         dataPrenotazione: this.appointment.dataPrenotazione,
         oraPrenotazione: this.appointment.oraPrenotazione,
+        descrizione: this.appointment.descrizione,  // Aggiungi descrizione
         confermato: false
       };
       this.appointmentService.bookAppointment(appointmentData).subscribe({

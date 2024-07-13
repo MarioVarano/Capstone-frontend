@@ -5,4 +5,6 @@ export interface IAppuntamento {
   dataPrenotazione: string;
   oraPrenotazione: string;
   confermato?: boolean;
+  descrizione?: string;  // Aggiungi questa riga
+
 }

@@ -63,6 +63,10 @@
         <label for="time" class="form-label">Ora</label>
         <input type="time" id="time" class="form-control" [(ngModel)]="appointment.oraPrenotazione" name="time" required>
       </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Descrizione</label>
+        <textarea id="description" class="form-control" [(ngModel)]="appointment.descrizione" name="description" required></textarea>
+      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annulla</button>
         <button type="submit" class="btn btn-primary">Prenota</button>

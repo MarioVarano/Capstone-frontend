@@ -74,6 +74,7 @@ export class ProfessionalComponent implements OnInit {
       id: appointment.id,
       dataPrenotazione: appointment.dataPrenotazione!,
       oraPrenotazione: appointment.oraPrenotazione!,
+      descrizione: appointment.descrizione!, // Aggiunta della descrizione
       confermato: appointment.confermato!,
       utente: appointment.utente
     }; // Clona l'appuntamento selezionato
@@ -89,6 +90,7 @@ export class ProfessionalComponent implements OnInit {
         idUtente: this.selectedAppointment.utente?.id!,
         dataPrenotazione: this.selectedAppointment.dataPrenotazione!,
         oraPrenotazione: this.selectedAppointment.oraPrenotazione!,
+        descrizione: this.selectedAppointment.descrizione!, // Aggiunta della descrizione
         confermato: this.selectedAppointment.confermato!
       };
 
@@ -108,6 +110,7 @@ export class ProfessionalComponent implements OnInit {
                     ...this.appointments[index],
                     dataPrenotazione: updatedAppointment.dataPrenotazione,
                     oraPrenotazione: updatedAppointment.oraPrenotazione,
+                    descrizione: updatedAppointment.descrizione, // Aggiunta della descrizione
                     confermato: this.appointments[index].confermato,
                     utente: this.appointments[index].utente
                   };

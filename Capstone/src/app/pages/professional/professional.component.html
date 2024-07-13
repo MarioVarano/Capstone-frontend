@@ -44,6 +44,7 @@
           <p class="card-text">Email: {{ appointment.utente.email }}</p>
           <p class="card-text">Data: {{ appointment.dataPrenotazione }}</p>
           <p class="card-text">Ora: {{ appointment.oraPrenotazione }}</p>
+          <p class="card-text">Descrizione: {{ appointment.descrizione }}</p>
           <p class="card-text">Confermato: {{ appointment.confermato ? 'Sì' : 'No' }}</p>
           <div class="d-flex justify-content-end">
             <button class="btn modifica btn-sm me-2" (click)="openEditAppointmentModal(appointment)">Modifica</button>
@@ -133,6 +134,10 @@
       <div class="mb-3">
         <label for="time" class="form-label">Ora</label>
         <input type="time" id="time" class="form-control" [(ngModel)]="selectedAppointment!.oraPrenotazione" name="time" required>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Descrizione</label>
+        <textarea id="description" class="form-control" [(ngModel)]="selectedAppointment!.descrizione" name="descrizione" required></textarea>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annulla</button>
