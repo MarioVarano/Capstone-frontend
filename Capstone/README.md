@@ -64,4 +64,12 @@ I contributi sono benvenuti! Per favore, fai un fork del repository e invia una 
 ## 📧 Contatti
 Per qualsiasi domanda o informazione, contattami all'indirizzo email mariovarano1995@gmail.com
 
+## Documentazione API Swagger
 
+Questo progetto utilizza Swagger per fornire una documentazione interattiva delle API.
+
+### Accesso alla Swagger UI
+
+Dopo aver avviato l'applicazione, puoi accedere alla Swagger UI al seguente URL:
+
+[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
