@@ -1,5 +1,5 @@
 .user-image-card {
-  width: 15%;
+  width: 21%;
   transition: transform 0.2s;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
@@ -135,4 +135,47 @@
 
 .bi, .bi-pencil {
   color: #114384;
+}
+
+@media (max-width: 768px) {
+  .user-image-card {
+    display: none;
+  }
+
+  .user-details-card {
+    max-width: 58%;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 760px) {
+    .user-details-card {
+      margin: 0 auto;
+      max-width: 94%;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    .user-image-card{
+      width: 21%;
+      margin-bottom: 20px;
+    }
+    .user-details-card {
+      width: 50%;
+      margin-bottom: 20px;
+    }
+    .img-thumbnail{
+      height: 100px;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .user-image-card{
+      display: none;
+    }
+    .user-details-card {
+      width: 100%;
+      margin-bottom: 20px;
+
+    }
+  }
 }
