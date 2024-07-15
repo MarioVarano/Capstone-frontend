@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, map, tap, Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment.development';
@@ -32,9 +32,11 @@ export class AuthService {
   );
   syncIsLoggedIn: boolean = false;
 
-  constructor(private http: HttpClient, private router: Router) {
-        this.getUserAfterRefresh();
+  constructor(private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute) {
 
+      this.getUserAfterRefresh();
     this.restoreUser();
     const storedUser = localStorage.getItem('currentUser');
     this.currentUserSubject = new BehaviorSubject<any>(storedUser ? JSON.parse(storedUser) : null);
@@ -56,6 +58,7 @@ export class AuthService {
   }
 
   login(loginData: ILoginData): Observable<AccessData> {
+    const returnUrl = localStorage.getItem('returnUrl') || '/';
     return this.http.post<AccessData>(this.loginUrl, loginData).pipe(
       tap((data) => {
         let token: string | undefined;
@@ -67,19 +70,22 @@ export class AuthService {
           professionista = data.loginResponseProfession.professionista;
           this.specializzazione = data.loginResponseProfession.specializzazione;
           user = professionista;
-          this.isUserProfessionalLoggedIn = true;  // Aggiorna proprietà
+          this.isUserProfessionalLoggedIn = true;
         } else if (data.userResponse) {
           token = data.userResponse.token;
           user = data.userResponse.user;
           this.specializzazione = data.userResponse.specializzazione;
-          this.isUserProfessionalLoggedIn = false;  // Aggiorna proprietà
+          this.isUserProfessionalLoggedIn = false;
         }
 
         if (token && user && this.specializzazione) {
           this.authSubject.next(user);
           localStorage.setItem('accessToken', token);
           localStorage.setItem('currentUser', JSON.stringify(user));
-          localStorage.setItem("specializzazione", this.specializzazione);
+          localStorage.setItem('specializzazione', this.specializzazione);
+
+          this.router.navigateByUrl(returnUrl); // Navigate to the saved return URL
+          localStorage.removeItem('returnUrl'); // Remove thimuovi l'URL di ritorno dopo l'uso
 
           this.autoLogout(token);
         }
@@ -87,6 +93,7 @@ export class AuthService {
       catchError(this.handleError)
     );
   }
+
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
@@ -214,24 +221,23 @@ export class AuthService {
   }
 
   getUserAfterRefresh(): void {
-    const user = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
-    const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
-    if (!user || !token) return;
+    const user = localStorage.getItem('currentUser');
+    const token = localStorage.getItem('accessToken');
+    const returnUrl = localStorage.getItem('returnUrl');
 
-    if (this.jwtHelper.isTokenExpired(token)) return;
+    if (user && token && !this.jwtHelper.isTokenExpired(token)) {
+        const userObject: IUser | IProfessionista = JSON.parse(user);
+        this.authSubject.next(userObject);
+        this.specializzazione = localStorage.getItem('specializzazione') || '';
+        this.isUserProfessionalLoggedIn = this.specializzazione === 'PROFESSIONISTA';
+        this.syncIsLoggedIn = true;
+        this.autoLogout(token);
 
-    const accessData: AccessData = {
-      userResponse: JSON.parse(user)
-    };
-
-    const userObject = accessData.userResponse?.user || accessData.loginResponseProfession?.professionista;
-
-    if (userObject) {
-      this.authSubject.next(userObject);
-      this.specializzazione = accessData.userResponse?.specializzazione || '';
-      this.isUserProfessionalLoggedIn = this.specializzazione === 'PROFESSIONISTA';
-      this.syncIsLoggedIn = true;
-      this.autoLogout(token);
+        if (returnUrl) {
+            this.router.navigateByUrl(returnUrl);
+            localStorage.removeItem('returnUrl');
+        }
     }
-  }
+}
+
 }

@@ -10,21 +10,20 @@ import { AuthService } from './auth.service';
 export class UserGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router) {}
-// user.guard.ts
 
-canActivate(
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot
-): Observable<boolean> {
-  return this.authService.user$.pipe(
-    map(user => {
-      const isUserSimple = !!user && this.authService.specializzazione == "UTENTE";
-      if (!isUserSimple) {
-        this.router.navigate(['']);
-      }
-      return isUserSimple;
-    })
-  );
-}
-
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> {
+    return this.authService.user$.pipe(
+      map(user => {
+        const isUserSimple = !!user && this.authService.specializzazione === "UTENTE";
+        if (!isUserSimple) {
+          localStorage.setItem('returnUrl', state.url);
+          this.router.navigate(['']);
+        }
+        return isUserSimple;
+      })
+    );
+  }
 }

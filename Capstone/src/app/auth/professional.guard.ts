@@ -13,14 +13,15 @@ export class ProfessionalGuard implements CanActivate {
 
  // professional.guard.ts
 
-canActivate(
+ canActivate(
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
 ): Observable<boolean> {
   return this.authService.user$.pipe(
     map(user => {
-      const isUserProfessional = !!user && !!this.authService.specializzazione;
+      const isUserProfessional = !!user && this.authService.specializzazione === 'PROFESSIONISTA';
       if (!isUserProfessional) {
+        localStorage.setItem('returnUrl', state.url);
         this.router.navigate(['']);
       }
       return isUserProfessional;
