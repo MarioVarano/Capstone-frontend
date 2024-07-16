@@ -23,7 +23,7 @@ export class ProfessionalsComponent implements OnInit {
     idUtente: 0,
     dataPrenotazione: '',
     oraPrenotazione: '',
-    descrizione: '',  // Aggiungi questa riga
+    descrizione: '',
     confermato: false
   };
   isLoggedIn = false;

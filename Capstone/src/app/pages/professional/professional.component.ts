@@ -61,25 +61,22 @@ export class ProfessionalComponent implements OnInit {
     this.appointmentService.getAppointmentsByProfessionalId(professionalId).subscribe({
       next: (appointments: IProfessionistaAppuntamentoDto[]) => {
         this.appointments = appointments;
-        console.log(this.appointments);
       },
       error: (err) => console.error('Failed to load professional appointments', err),
     });
   }
 
   openEditAppointmentModal(appointment: IProfessionistaAppuntamentoDto): void {
-    console.log("-----------------------------", appointment);
 
     this.selectedAppointment = {
       id: appointment.id,
       dataPrenotazione: appointment.dataPrenotazione!,
       oraPrenotazione: appointment.oraPrenotazione!,
-      descrizione: appointment.descrizione!, // Aggiunta della descrizione
+      descrizione: appointment.descrizione!,
       confermato: appointment.confermato!,
       utente: appointment.utente
-    }; // Clona l'appuntamento selezionato
+    };
     this.modalService.open(this.editAppointmentModal);
-    console.log("-----------------------------", this.selectedAppointment);
   }
 
   saveAppointmentChanges(): void {
@@ -90,7 +87,7 @@ export class ProfessionalComponent implements OnInit {
         idUtente: this.selectedAppointment.utente?.id!,
         dataPrenotazione: this.selectedAppointment.dataPrenotazione!,
         oraPrenotazione: this.selectedAppointment.oraPrenotazione!,
-        descrizione: this.selectedAppointment.descrizione!, // Aggiunta della descrizione
+        descrizione: this.selectedAppointment.descrizione!,
         confermato: this.selectedAppointment.confermato!
       };
 
@@ -110,12 +107,12 @@ export class ProfessionalComponent implements OnInit {
                     ...this.appointments[index],
                     dataPrenotazione: updatedAppointment.dataPrenotazione,
                     oraPrenotazione: updatedAppointment.oraPrenotazione,
-                    descrizione: updatedAppointment.descrizione, // Aggiunta della descrizione
+                    descrizione: updatedAppointment.descrizione,
                     confermato: this.appointments[index].confermato,
                     utente: this.appointments[index].utente
                   };
                 }
-                this.errorMessage = null; // Rimuovi l'errore
+                this.errorMessage = null;
                 this.modalService.dismissAll();
 
               } else {
@@ -158,10 +155,8 @@ export class ProfessionalComponent implements OnInit {
         url => {
           this.avatar  = this.currentProfessional.avatar = url;
 
-          // Aggiorna il profilo dell'utente con il nuovo URL dell'avatar
           this.saveChanges();
 
-          // Reset the file input
           this.selectedFile = null;
           const fileInput = document.getElementById('fileInput') as HTMLInputElement;
           fileInput.value = '';
@@ -182,14 +177,11 @@ export class ProfessionalComponent implements OnInit {
 
   confirmDelete():void {
     if (this.currentProfessional) {
-      console.log(this.currentProfessional);
 
       this.professionistaService.deleteProfessionista(this.currentProfessional.id).subscribe({
         next: (response) => {
-          console.log(response);
 
           this.message = response;
-          console.log(this.message);
 
           this.modalRef.close();
         },
@@ -229,8 +221,7 @@ export class ProfessionalComponent implements OnInit {
   deleteAvatar(): void {
     this.professionistaService.deleteAvatar(this.currentProfessional.id).subscribe(
       response => {
-        this.currentProfessional.avatar = ''; // Rimuovi l'URL dell'avatar
-        console.log('Avatar deleted successfully', response);
+        this.currentProfessional.avatar = '';
       },
       error => console.error('Failed to delete avatar', error)
     );

@@ -4,11 +4,11 @@
 }
 
 .info-section {
-  padding: 40px 0; /* Spaziatura verticale */
+  padding: 40px 0;
   background-image: url('/assets/MKMM-2.png');
-  background-size: cover; /* Copre l'intera area della sezione */
-  background-position: center; /* Centra l'immagine */
-  background-repeat: no-repeat; /* Non ripete l'immagine */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
   .container {
     max-width: 1200px;
@@ -19,13 +19,13 @@
       font-size: 2.5rem;
       font-weight: bold;
       margin-bottom: 20px;
-      color: #191c1f; /* Colore del testo scuro */
+      color: #191c1f;
     }
 
     p {
       font-size: 1.1rem;
       line-height: 1.6;
-      color: #24282c; /* Colore del testo grigio */
+      color: #24282c;
       margin-bottom: 20px;
     }
 

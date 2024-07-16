@@ -8,7 +8,7 @@
 }
 
 .navbar.scrolled {
-  background-color: #0c2e5a; /* Colore di sfondo quando la pagina è scorsa */
+  background-color: #0c2e5a;
 }
 
 .nav-link.active,
@@ -18,9 +18,9 @@
 
 .logo {
   width: 170px;
-  transition: width 0.3s, height 0.3s; /* Aggiungi una transizione per il logo */
+  transition: width 0.3s, height 0.3s;
 }
 
 .logo.large {
-  width: 200px; /* Dimensione del logo quando la pagina è scorsa */
+  width: 200px;
 }

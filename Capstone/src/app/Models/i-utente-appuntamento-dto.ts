@@ -5,6 +5,6 @@ export interface IUtenteAppuntamentoDto {
   dataPrenotazione: string;
   oraPrenotazione: string;
   confermato: boolean;
-  descrizione?: string;  // Aggiungi questa riga
+  descrizione?: string;
   professionista: IProfessionistaDto;
 }

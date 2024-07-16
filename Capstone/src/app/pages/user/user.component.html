@@ -48,7 +48,7 @@
           <p class="card-text">Data: {{ appointment.dataPrenotazione }}</p>
           <p class="card-text">Ora: {{ appointment.oraPrenotazione }}</p>
           <p class="card-text">Descrizione: {{ appointment.descrizione }}</p>
-          <p class="card-text">Confermato: {{ appointment.confermato ? 'Sì' : 'No' }}</p>
+          <p class="card-text">Stato prenotazione: {{ appointment.confermato ? 'In attesa' : 'Confermato' }}</p>
           <div class="d-flex justify-content-end">
             <button class="btn btn-primary me-2" (click)="openEditAppointmentModal(appointment)">Modifica</button>
             <button class="btn elimina" (click)="confirmDeleteAppointment(appointment.id)">Elimina</button>

@@ -61,7 +61,6 @@ export class UserComponent implements OnInit {
     this.appointmentService.getAppointmentsByUserId(userId).subscribe({
       next: (appointments: IUtenteAppuntamentoDto[]) => {
         this.appointments = appointments;
-        console.log(this.appointments);
 
       },
       error: (err) => console.error('Failed to load user appointments', err),
@@ -69,7 +68,6 @@ export class UserComponent implements OnInit {
   }
 
   openEditAppointmentModal(appointment: IUtenteAppuntamentoDto): void {
-    console.log("-----------------------------", appointment);
 
     this.selectedAppointment = {
       id: appointment.id,
@@ -77,11 +75,10 @@ export class UserComponent implements OnInit {
       idUtente:this.currentUser.id!,
       dataPrenotazione: appointment.dataPrenotazione!,
       oraPrenotazione: appointment.oraPrenotazione!,
-      descrizione: appointment.descrizione!, // Aggiunta della descrizione
+      descrizione: appointment.descrizione!,
       confermato: appointment.confermato!
-    }; // Clona l'appuntamento selezionato
+    };
     this.modalService.open(this.editAppointmentModal);
-    console.log("-----------------------------", this.selectedAppointment);
   }
 
 
@@ -93,7 +90,7 @@ export class UserComponent implements OnInit {
         idUtente: this.selectedAppointment.idUtente!,
         dataPrenotazione: this.selectedAppointment.dataPrenotazione!,
         oraPrenotazione: this.selectedAppointment.oraPrenotazione!,
-        descrizione: this.selectedAppointment.descrizione!, // Aggiunta della descrizione
+        descrizione: this.selectedAppointment.descrizione!,
         confermato: this.selectedAppointment.confermato!
       };
       console.log(payload);
@@ -112,9 +109,9 @@ export class UserComponent implements OnInit {
                     ...this.appointments[index],
                     dataPrenotazione: updatedAppointment.dataPrenotazione,
                     oraPrenotazione: updatedAppointment.oraPrenotazione,
-                    descrizione: updatedAppointment.descrizione, // Aggiunta della descrizione
-                    confermato: this.appointments[index].confermato, // Mantieni lo stato confermato
-                    professionista: this.appointments[index].professionista // Mantieni i dettagli del professionista
+                    descrizione: updatedAppointment.descrizione,
+                    confermato: this.appointments[index].confermato,
+                    professionista: this.appointments[index].professionista
                   };
                 }
                 this.errorMessage = null;
