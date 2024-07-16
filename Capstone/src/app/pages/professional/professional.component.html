@@ -21,6 +21,8 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item px-0">Città: {{ currentProfessional.city }}</li>
           <li class="list-group-item px-0">Email: {{ currentProfessional.email }}</li>
+          <li class="list-group-item px-0">Specializzazione: {{ currentProfessional.specializzazione }}</li>
+          <li class="list-group-item px-0">Descrizione: {{ currentProfessional.descrizione }}</li>
         </ul>
       </div>
 
@@ -85,8 +87,8 @@
         <input type="text" id="city" class="form-control" [(ngModel)]="currentProfessional.city" name="city" required>
       </div>
       <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" id="email" class="form-control" [(ngModel)]="currentProfessional.email" name="email" required>
+        <label for="descrizione" class="form-label">Descrizione</label>
+        <input type="descrizione" id="descrizione" class="form-control" [(ngModel)]="currentProfessional.descrizione" name="descrizione" required>
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
