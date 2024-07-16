@@ -1,6 +1,6 @@
 <div *ngIf="currentUser" class="d-flex justify-content-center mt-5">
   <!-- Card Immagine -->
-  <div class="card user-image-card me-3 " (click)="triggerFileInput()">
+  <div class="card user-image-card me-3" (click)="triggerFileInput()">
     <div class="card-body text-center p-0">
       <img [src]="avatar || '../../../assets/defaultpng.png'" alt="Avatar" class="img-thumbnail">
       <input type="file" id="fileInput" class="file-input" (change)="onFileSelected($event)">
